@@ -1,0 +1,35 @@
+﻿@{
+    ViewBag.Title = "Location";
+}
+<link href="../../Content/GoogleLocation.css" rel="stylesheet" media="screen" type="text/css" />
+<script type="text/javascript"
+    src="http://maps.googleapis.com/maps/api/js?key=AIzaSyAmu79gTOrQSQqHLG9Flg4eqX6WMMVKkME&sensor=false">
+</script>
+<script type="text/javascript" src="../../Scripts/GoogleMapLocation.js"></script>
+<script>
+    $(function () {
+        codeLatLng(-42.880755, 147.327300);
+        dothis(1);
+    });
+</script>
+<body>
+    <div style="height:600px">
+        <div class="location_name">
+            <p><a href="#" onclick="codeLatLng(-42.880755,147.327300),dothis(this.id)" id=1>Hobart Store</a></p><hr />
+            <p><a href="#" onclick="codeLatLng(-41.437700,147.137280),dothis(this.id)" id=2>Launceston Store</a></p><hr />
+            <p><a href="#" onclick="codeLatLng(-41.050459,145.905281),dothis(this.id)" id=3>Burine Store</a></p><hr />
+            <p><a href="#" onclick="codeLatLng(-42.831805,147.273901),dothis(this.id)" id=4>Northgate Store</a></p><hr />
+        </div>
+
+        <div id="map_canvas"></div>
+        <div id="shopName"></div>
+        <br />
+        <div id="shopDescription"></div>
+        <br />
+        <div id="shopAddress"></div>
+        <br />
+        <div id="shopContactNum"></div>
+        <br />
+        <div id="shopOpenTime"></div>
+    </div>
+</body>

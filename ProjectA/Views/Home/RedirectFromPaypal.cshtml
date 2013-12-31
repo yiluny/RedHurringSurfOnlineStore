@@ -1,0 +1,20 @@
+﻿@{
+    ViewBag.Title = "RedirectFromPaypal";
+}
+
+<div style="margin-bottom:80px;">
+    <h3>Thank you for shopping at Red Herring Online store!</h3>
+    <hr />
+    <p>The order has been placed, and the status can be found in 
+        @if (HttpContext.Current.Request.Cookies["User"] != null)
+        {
+            String userName = HttpContext.Current.Request.Cookies["User"].Values.Get(0);
+            <a href="@Url.Action("orderManagement", "myProfile", new { userName = userName })">My Profile -> Order Management</a>
+        }
+        else if (Session["LoginUser"] != null)
+        {
+            <a href="@Url.Action("orderManagement", "myProfile", new { userName = Session["LoginUser"] })">My Profile -> Order Management</a>
+        }
+    </p>
+    <p>If you have any queries about orders, please contact us by phone service: (03) 6213 4555</p>
+</div>

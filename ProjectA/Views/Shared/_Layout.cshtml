@@ -1,0 +1,248 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewBag.Title</title>
+
+
+    <link href="@Url.Content("~/Content/Site.css")" rel="stylesheet" type="text/css" />
+
+
+    <script src="@Url.Content("~/Scripts/modernizr-2.5.3.js")" type="text/javascript"></script>
+
+    <script src="@Url.Content("~/Scripts/jquery-1.7.1.js")" type="text/javascript"></script>
+    
+
+    <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
+    <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
+    <link href="@Url.Content("~/Content/bootstrap/bootstrap.min.css")" rel="stylesheet" type="text/css" />
+    <script src="@Url.Content("~/Scripts/bootstrap.js")" type="text/javascript"></script>
+
+
+    <script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css" />
+    <script src="http://code.jquery.com/ui/1.10.2/jquery-ui.js"></script>
+
+    <script type="text/javascript" src="../../Scripts/jquery.jcarousel.min.js"></script>
+
+    <!-- recaptcha in the sign up page-->
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#tags').keyup(function () {
+                $.post("/Product/getSearch", { "userInput": $('#tags').val() },
+                        function (data) {
+                            try {
+                                $("#tags").autocomplete
+                                ({
+                                    source: function (request, response) {
+                                        var matcher = new RegExp("^" + $.ui.autocomplete.escapeRegex(request.term), "i");
+                                        response($.grep(data, function (item) {
+                                            return matcher.test(item);
+                                        }));
+                                    }
+                                });
+                            }
+                            catch (Ex) {
+                                alert(Ex.message);
+                            }
+                        });
+            });
+
+            $("#cart_refresh").mouseover(function () {
+                $("#cartSum").html('<img src="@Url.Content("~/Content/themes/base/images/spinningWheel.gif")" style="width:100px; height:100px; margin:auto; padding-top:100px;"/>');
+                $("#cartSum").load('@Url.Action("smallCart", "ShoppingCart")');
+                $("#cartSum").slideDown(300);
+                setTimeout(function () {
+                    if ($('#cartSum:hover').length == 0)
+
+                        $("#cartSum").slideUp(300);
+                }, 5000);
+            });
+
+        });
+    </script>
+
+</head>
+
+
+<body>
+    <div id="header_top" style="z-index:1000;">
+
+        <div id="header_top_left">
+            @Html.ActionLink("Weather", "Weather", "Information")
+        </div>
+
+        <div id="header_top_right">
+            <span>G'day</span>&nbsp&nbsp
+
+                @if (HttpContext.Current.Request.Cookies["User"] != null)
+                {
+                    string userName = HttpContext.Current.Request.Cookies["User"].Values.Get(0);
+                    
+                    <a href="@Url.Action("personalInfo", "myProfile", new { userName = userName })">my profile</a>
+                    <a style="margin-left: 8px;">@userName</a>
+                }
+                else if (Session["LoginUser"] != null)
+                {
+                    <a href="@Url.Action("personalInfo", "myProfile", new { userName = Session["LoginUser"] })">my profile</a>
+                    <a style="margin-left: 8px;">@Session["LoginUser"]</a>
+                }
+                else
+                {
+                    <a href="@Url.Content("~/signIn/signIn")">sign in</a>    
+                }&nbsp&nbsp
+            
+
+                
+                <a href="@Url.Action("AdminLogIn", "Home")">Administration</a>
+
+                <a href="@Url.Content("~/Register/")">register</a>&nbsp&nbsp
+            <span style="z-index:1000; position:relative;">
+            <span id="cart_refresh">@{Html.RenderAction("CartSummary", "ShoppingCart");}</span>
+            <div style="width:500px;height:310px; display:none; position:absolute; right:0; margin-top:3px;background-color:#C30008;padding:0;text-align:center" id="cartSum"">
+                @{Html.RenderAction("smallCart", "ShoppingCart");}
+            </div>
+                </span>
+            @if (Session["LoginUser"] != null)
+            {
+                <a href="@Url.Action("Index", "logOff")">Log off</a>
+
+            }
+        </div>
+
+
+    </div>
+
+
+    <div id="main_container">
+        <div id="header">
+
+            <a href="@Url.Action("Index", "Home")">
+                <img src="../../Content/themes/base/images/logo.png" />
+            </a>
+
+            <div id="search">
+                @using (Html.BeginForm("searchResult", "SearchResult", FormMethod.Get))
+                {
+                    <div class="input-prepend">
+                        <span class="add-on"><i class="icon-search"></i></span>
+                        <input value="" class="input" type="text" placeholder="Key Word, then press Enter " name="search" x-webkit-speech id="tags" />
+                    </div>        
+                    <input type="submit" class="btn" value="search" style="margin-bottom:10px;"/>      
+                }
+            </div>
+
+
+        </div>
+
+        <hr />
+
+
+        <div class="row-fluid">
+            <div class="span1">
+            </div>
+            <div class="span10" style="margin:0;">
+                <div id="menu_tab">
+                    @{Html.RenderAction("SubCategoryMenu", "Product");}
+                </div>
+            </div>
+            <div class="span1">
+            </div>
+        </div>
+
+        <div class="row-fluid">
+            <div class="span1">
+            </div>
+            <div class="span10" style="margin:0;">
+                <div>@RenderBody()</div>
+            </div>
+            <div class="span1">
+            </div>
+        </div>
+
+    </div>
+
+
+    <footer>
+        <div class="container-fluid" style="color: #DF0101; background-color: #303030; list-style-type:none;">
+            <div class="row-fluid">
+                <div class="span12" style="padding: 15px 0 15px 0;">
+                    <div class="row-fluid">
+                        <div class="span2">
+                        </div>
+                        <div class="span8">
+                            <div class="row-fluid">
+                                <div class="span3">
+                                    <img class="logo_img" src="../../Content/themes/base/images/footerlogor.png" />
+                                </div>
+                                <div class="span3">
+                                    <ul class="links" >
+                                        <li style="border-bottom: 1px solid red;font-size:16px;padding:0 0 4px 0;"><span>Red Herring (Hobart) </span></li>
+                                        <li></li>
+                                       
+                                        <li><a style="color:white;">Phone : (03) 6213 4555</a></li>
+                                        <li><a style="color:white;">Address: 75 Liverpool St, Hobart TAS 7000 </a></li>
+                                    </ul>
+                                </div>
+                                <div class="span3">
+                                    <ul class="links">
+                                        <li style="border-bottom: 1px solid red;font-size:16px;padding:0 0 4px 0;"><span>Information</span></li>
+                                        <li></li>
+                                        <li><a href="http://www.redherringsurf.com.au/contact-us" style="color:white;">Contact Us</a></li>
+                                        <li><a href="http://www.redherringsurf.com.au/about-rhs" style="color:white;">About RHS</a></li>
+                                        <li><a href="http://instagram.com/redherringsurf#" style="color:white;">Instagram</a></li>
+                                        <li></li>
+                                    </ul>
+                                </div>
+                                <div class="span3">
+                                    <ul class="links" id="join-us">
+                                        <li style="border-bottom: 1px solid red;font-size:16px;padding:0 0 4px 0;"><span>Join us</span></li>
+                                        <li></li>
+                                        <li><a href="https://www.facebook.com/pages/Red-Herring-Surf/135890589782493?fref=ts" class="footerfb">Facebook</a></li>
+                                        <li><a href="https://twitter.com/redherringsurf" class="footertweet " >Twitter</a></li>
+                                        <li><a href="http://www.youtube.com/user/redherringsurftas" class="footeryt">Youtube</a></li>
+                                        <li><a href="https://plus.google.com/+grahamandgreen/" class="footergp">Google+</a></li>
+                                        <li></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="span2">
+                        </div>
+                    </div>
+                    <div class="row-fluid">
+                        <div class="span12">
+                            <div class="row-fluid">
+                                <div class="span2">
+                                </div>
+                                <div class="span8">
+                                    <div class="row-fluid">
+                                        <div class="span2">
+                                        </div>
+                                        <div class="span8" style="text-align: center;">
+                                            <p>Copyright © 2013 Red Herring  |   All Rights Reserved  | <a href="#">Terms of use</a></p>
+                                            <img src="../../Content/themes/base/images/payment.gif" alt="" title="" />
+                                        </div>
+                                        <div class="span2">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="span2">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+<script src="@Url.Content("~/Scripts/jquery.pin.js")"></script>
+<script>
+    $("#header_top").pin({
+        minWidth: 1250
+    });
+</script>
+</body>
+</html>

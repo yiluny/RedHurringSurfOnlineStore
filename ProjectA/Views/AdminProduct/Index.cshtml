@@ -1,0 +1,38 @@
+﻿@model Webdiyer.WebControls.Mvc.PagedList<ProjectA.Models.ProductDB>
+
+@{
+    ViewBag.Title = "Products";
+    Layout = "~/Views/Shared/AdminHome.cshtml";
+}
+
+
+<script type="text/javascript">
+    $(document).ready(function ()
+    {
+        $('.ProductcheckBox').change(function ()
+        {
+            if ($("#productList input:checkbox:checked").length > 0)
+            {
+                if ($('#deleteButton a').length ==0)
+                {
+                    $('#deleteButton').append('<a class ="btn btn-large btn-danger" id="deleteProducts" href="#modal-container" data-toggle="modal"  role="button" onclick="alertContent()" style="display:inline-block;">delete </a>');
+                }
+            }
+            else
+            {
+                $('#deleteButton').empty();
+            }
+        });
+    });
+
+    function alertContent()
+    {
+        var itemsToDetele = $("#productList input:checkbox:checked").length;
+        $('#modal-container .modal-body p').html('Are you sure that you want to delete those '+itemsToDetele+' items permanently?');
+    }
+</script>
+
+
+<div id="content">
+    @{Html.RenderPartial("ProductsAdminList", Model); }
+</div><br />

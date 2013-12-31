@@ -1,0 +1,159 @@
+﻿@using Webdiyer.WebControls.Mvc;
+@model PagedList<ProjectA.Models.ProductDB>
+@{
+    ViewBag.Title = "searchList";
+}
+
+@helper Truncate(string input, int length)
+{
+    if (input.Length <= length)
+    {
+    @input
+    }
+    else
+    {
+    @input.Substring(0, length)<text>...</text>
+    }
+}
+
+<script src="@Url.Content("~/Scripts/jquery.highlight-4.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.expander.js")" type="text/javascript"></script>
+<script type="text/javascript">
+    function getUrlParam(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
+        var r = window.location.search.substr(1).match(reg);  //匹配目标参数
+        if (r != null) return unescape(r[2]); return null; //返回参数值
+    }
+    $(document).ready(function () {
+        var param = getUrlParam('search');
+
+        $(".productDescription").highlight(param);
+
+        //$(".productDescription:contains(" + param + ")").html($(".productDescription:contains(" + param + ")").html().replace(param, "<font style='color:red;'>" + param + "</font>"));
+        $('.table tr td span').each(function (i) {
+            var id = $(this).attr("id");
+            $('#' + id + ' a').find('div').html('<img src="@Url.Content("~/Content/themes/base/images/spinningWheel.gif")" style="height:150px;"/>');
+
+            $.get("/Home/GetImage", { "id": id },
+                    function (data) {
+                        try {
+                            var altName = $('#' + id).attr('data');
+                            $('#' + id).find('div').html('<img id="' + id + '\_searchList' + '\" src="/Home/GetImage?id=' + id + '\" style="width:100%; height:100%;"/>');
+                            //var img = new Image();
+                            //img.src = $('#' + id + '_searchList').attr('src');
+                            //img.onload = function () {
+                            //    var H = this.height,
+                            //        W = this.width;
+
+                            //    if (150 / H < 208 / W) {
+
+                            //        W = W * 150 / H;
+                            //        H = 150;
+                            //    }
+                            //    else if (208 / W > 150 / H) {
+
+                            //        H = H * 208 / W;
+                            //        W = 208;
+                            //    }
+                            //    $('#' + id + '_searchList').css('width', W + "px", 'height', H + 'px');
+                            //}
+                        }
+                        catch (Ex) {
+                            alert(Ex.message);
+                        }
+                    });
+        });
+    });
+</script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        // override default options (also overrides global overrides)
+        $('div#searchProductDescription p').expander({
+            slicePoint: 150,  // default is 100
+            expandPrefix: ' ', // default is '... '
+            expandText: '[Read More]', // default is 'read more'
+            collapseTimer: 5000, // re-collapses after 5 seconds; default is 0, so no re-collapsing
+            userCollapseText: '[Less]'  // default is 'read less'
+        });
+
+    });
+
+</script>
+
+<div class="container-fluid">
+    <div class="span12">
+        <h3>Search Result</h3><hr />
+
+    </div>
+</div>
+
+@if(Model.Count() > 0)
+{
+    <div class="container-fluid" id="dvOrders" style=" margin-bottom:25px;">
+
+        <table class="table table-hover table-bordered table-condensed span12">
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td class="span3">
+                        <span id ="@item.productId.ToString()">
+                            <a href="@Url.Action("Details", "Product", new { id = item.productId })" class="row-fluid" style="margin:auto; text-align:center">
+                            <div></div>
+                            </a>
+                        </span>
+                    </td>
+
+                    <td class="span9" style="height:auto;">
+
+                        <div class="row-fluid" >
+                            <div class="span12">
+                                <h3>
+                                    <a href="@Url.Action("Details", "Product", new { id = item.productId })">
+                                        @item.productName
+                                    </a>
+                                </h3>
+                            </div>
+                        </div>
+
+                        <div class="row-fluid" style="height:auto;">
+                            <div class="span12" id="searchProductDescription" >
+                                <p class="productDescription">
+                                    @Html.Raw(item.productDescription)
+                                </p>
+                            
+                            </div>
+                        </div>                    
+                    </td>
+
+                </tr>
+            }
+        </table>
+
+         <div id="pagination" class="pagination">
+
+            @Html.AjaxPager(Model, new PagerOptions()
+            {
+                PageIndexParameterName = "id",
+                ContainerTagName = "ul",
+                PagerItemWrapperFormatString = "<li>{0}</li>",
+                CurrentPagerItemWrapperFormatString = "<li><a>{0}</a></li>",
+                NumericPagerItemWrapperFormatString = "<li>{0}</li>",
+                PrevPageText = "Prev",
+                NextPageText = "Next",
+                ShowDisabledPagerItems = false,
+                AlwaysShowFirstLastPageNumber = true
+            }, new AjaxOptions { UpdateTargetId = "dvOrders" })
+
+        </div>
+    </div>
+}
+else
+{
+    <div class="container-fluid" style="min-height:200px; margin-bottom:25px;">
+        <strong>
+            Sorry, your search for @ViewBag.content did not get any results.
+        </strong>
+    </div>
+}

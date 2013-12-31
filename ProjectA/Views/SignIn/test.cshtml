@@ -1,0 +1,69 @@
+﻿@{
+    Recaptcha.RecaptchaControlMvc.PublicKey = "6LcGet8SAAAAAIBWahEEoDFavKMUiZQlsJbhpgLq";
+    Recaptcha.RecaptchaControlMvc.PrivateKey = "6LcGet8SAAAAAIghzhrhvaSeOe4LEUACN7em56kV";
+}
+
+
+<script type="text/javascript">
+    var RecaptchaOptions = {
+        theme: 'custom',
+        custom_theme_widget: 'recaptcha_widget'
+    };
+</script>
+
+
+
+@using (Html.BeginForm("checkOnshopCart", "SignIn", FormMethod.Post, new { id="test"}))
+{
+        <ul style="float: left; list-style-type: none;">
+            <li style="font-family: Arial Black; font-size: x-large; margin-top: 15px; margin-bottom: 25px;">Sign In</li>
+
+
+            <li class="alert alert-error">
+                <strong>Warning!</strong><p id="error" class="alert alert-error"></p>
+                @Html.ValidationMessage("SignIn", new { @class = "alert alert-error" })
+            </li>
+
+            <li>Username :</li>
+            <li>
+
+                <div class="input-prepend">
+                    <span class="add-on" style="height: 30px; width: 30px;"><i class="icon-user icon-2x" style="padding-right: 10px; padding-top: 5px;"></i></span>
+
+                    @Html.TextBox("Username", "", new { @class = "span4", placeholder = "Username", style = "height:30px; font-size:17px;" })
+                </div>
+                <br />
+                @Html.ValidationMessage("Username")
+            </li>
+
+            <li>Password :</li>
+            <li>
+
+                <div class="input-prepend">
+                    <span class="add-on" style="height: 30px; width: 30px;"><i class="icon-key icon-2x" style="padding-right: 17px; padding-top: 5px;"></i></span>
+
+                    @Html.Password("Password", "", new { @class = "span4", placeholder = "Password", style = "height:30px; font-size:17px;" })
+                </div>
+                <br />
+            </li>
+
+            <li>
+                <label id="lbl_rememberMe" for="rememberMe" style="text-align: center; font-size: 15px; bottom: 0; left: 30px; display: inline;">
+                    @Html.CheckBox("rememberMe", new { @id = "rememberMe", style = " text-align:center; font-size:14px" })
+
+                    Remember me
+                </label>
+            </li>
+
+            <li>
+                <a href="/SignIn/ResetPassword" style="text-align: left; font-size: 15px; bottom: 0; left: 30px; color: #005580;">Forget password?</a>
+            </li>
+
+            <li style="margin-top: 20px;">
+                <input type="submit" class="btn btn-medium btn-info" id="shopCartSignIn" value="Sign In" style="font-size: 16px;" />
+            </li>
+        </ul>
+
+
+}
+

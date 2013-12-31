@@ -1,0 +1,227 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/AdminHome.cshtml";
+}
+
+	
+<script src="http://code.highcharts.com/highcharts.js"></script>
+<script src="http://code.highcharts.com/modules/exporting.js"></script>
+<script type="text/javascript">
+
+    $(function () {
+
+
+        var thisYear = new Date().getFullYear();
+        var lastYear = thisYear - 1;
+        getSeasonProductDetail("week");
+        getMonthlyOrdersDetail(lastYear);
+        function getSeasonProductDetail(text) {
+            $.post("/AdminHome/PieChartResult", { "date": text },
+                function (data) {
+                    var chart;
+                    var pieData = [];
+                    for (var i = 0; i < data.length; i++) {
+                        pieData.push([data[i].mainCategoryName + "-" + data[i].subCategoryName, data[i].sum]);
+                    }
+                    // Build the chart
+                    $('#pieContainer').highcharts({
+                        chart: {
+                            plotBackgroundColor: null,
+                            plotBorderWidth: null,
+                            plotShadow: false
+                        },
+                        title: {
+                            text: "The quantity of different categorys' goods shared"
+                        },
+                        tooltip: {
+                            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+                        },
+                        plotOptions: {
+                            pie: {
+                                allowPointSelect: true,
+                                cursor: 'pointer',
+                                dataLabels: {
+                                    enabled: false
+                                },
+                                showInLegend: true
+                            }
+                        },
+                        series: [{
+                            type: 'pie',
+                            name: 'Quantity share',
+                            data: pieData,
+                        }]
+                    });
+                });
+        }
+        $("#pieChart").change(function () {
+            var text = $(this).val();
+            getSeasonProductDetail(text);
+
+        });
+
+        $("#lineChart").change(function () {
+            var text = $(this).val();
+            text = parseInt(text);
+            getMonthlyOrdersDetail(text);
+
+        });
+
+        function getMonthlyOrdersDetail(text) {
+            $.post("/AdminHome/LineChartResult", { "yearTime": text },
+                function (data) {
+                    $('#LineChartcontainer').highcharts({
+                        chart: {
+                            type: 'areaspline'
+                        },
+                        title: {
+                            text: 'Monthly consumption by online customers in different years'
+                        },
+                        legend: {
+                            layout: 'vertical',
+                            align: 'left',
+                            verticalAlign: 'top',
+                            x: 150,
+                            y: 100,
+                            floating: true,
+                            borderWidth: 1,
+                            backgroundColor: '#FFFFFF'
+                        },
+                        xAxis: {
+                            categories: [
+                                'Jan.',
+                                'Feb.',
+                                'Mar.',
+                                'Apr.',
+                                'May',
+                                'Jun.',
+                                'Jul.',
+                                'Aug.',
+                                'Sept.',
+                                'Oct.',
+                                'Nov.',
+                                'Dec.'
+                            ],
+                        },
+                        yAxis: {
+                            title: {
+                                text: 'Total consumption (dollars)'
+                            }
+                        },
+                        tooltip: {
+                            shared: true,
+                            valueSuffix: ' dollars'
+                        },
+                        credits: {
+                            enabled: false
+                        },
+                        plotOptions: {
+                            areaspline: {
+                                fillOpacity: 0.5
+                            }
+                        },
+                        series: [{
+                            name: data[0].year,
+                            data: data[0].sum
+                        }, {
+                            name: data[1].year,
+                            data: data[1].sum
+                        }]
+                    });
+                });
+        }
+
+
+        $("#post_note").click(function () {
+            var note = $("#note_textarea").val();
+            var note_poster = $("#note_poster").val();
+            if (note == "") {
+                alert("post area can not be empty...");
+                return null;
+            }
+
+            $.post("/AdminHome/SaveNote", { "note": note, "poster": note_poster },
+                function (data) {
+                    var date = getFormattedDate(data.noteDate);
+                    $("#note_message").prepend(
+                            "<li class='noteLength pull-left'>" + data.note + " - " + data.poster + "</li>" +
+                            "<li class='pull-right'>" + date + "</li>" +
+                            "<br /><hr />"
+                        );
+                });
+        });
+
+        function getFormattedDate() {
+            var date = new Date();
+            var str = date.getFullYear() + "-" + date.getMonth() + "-" + date.getDate() + " " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+            var now = new Date();
+            if (now.getDate() == date.getDate())
+                str = "Today" + " " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+            return str;
+        }
+    });
+
+</script>
+<style>
+
+</style>
+<div class="container-fluid">
+    <div class="row-fluid">
+        <div class="span12">
+            <div class="row-fluid">
+                <div class="span7">
+                    <div style="padding:3px 3px 3px 3px; margin-bottom:20px; background-color:white; margin-top:20px; border-radius:5px; border:2px solid black; box-shadow:3px 3px;">
+                        <h3>
+                            <iframe src="https://www.google.com/calendar/embed?src=allenyang987%40gmail.com&ctz=Australia/Hobart" style="border: 0" width="550" height="450" frameborder="0" scrolling="no"></iframe>
+                        </h3>
+                    </div>
+                </div>
+                <div class="span5" style=" margin-bottom:20px; border:2px solid black; background-color:white; box-shadow:3px 3px; border-radius:5px; padding-bottom:10px; margin-top:20px;">
+                    <p class="pull-left" style="margin-left:25px; margin-top:10px; font-size:20px;"><b>Message</b></p>
+                            <div id="notebook" style="background-image: url(../Content/themes/base/images/notebook.png); width: 403px; height: 468px; background-size: 403px 468px; margin-top:10px;">
+                                <a class="btn btn-info pull-right" id="take_note_hide" style="display: none">
+                                    <i class="icon-minus-sign icon-2x"></i>
+                                </a>
+                                <div id="dashboard" style="width: 350px; height: 320px; background-color:whitesmoke; margin-left: 45px; margin-top:10px; overflow-y:auto">
+                                    <ul style="list-style-type: none; " id="note_message">
+                                        @foreach (var note in ViewBag.notes)
+                                        {
+                                            <li class="noteLength" style="max-width:350px;float:left;">@note.note - @note.poster</li>
+                                            <li class="pull-right">@Html.Action("formatADate", "AdminHome", new { date = note.noteDate })</li>
+                                            <br /><hr />
+                                        }
+                                    </ul>
+                                </div>
+                                <div id="add_notes" style="margin-bottom:15px; width: 350px; height: 50px; margin-left: 45px; z-index: 1000;">
+                                    <textarea style="width: 320px; height: 50px; float: left; background-color:whitesmoke;margin:10px;" id="note_textarea"></textarea>
+                                    <input placeholder="name" id="note_poster" style="width: 80px; border-radius:5px; height: 23px;margin-left:10px;float: left;"  class="pull-right"/>
+                                    <input type="submit" class="btn btn-info pull-right" id="post_note" value="Post" />
+                              </div>
+                                <br />
+                            </div>
+                        </div>
+            </div>
+            <div class="row-fluid">
+                <div class="span12">
+                    <div class="row-fluid">
+                        <div class="span5" style="padding:3px 3px 3px 3px; border-radius:5px; background-color:white; margin-bottom:20px; border:2px solid black; box-shadow:3px 3px;">
+                                Find the results from:
+                            <select id="pieChart">
+                                <option value="week">the past week</option>
+                                <option value="month">the last four weeks</option>
+                                <option value="year">the past year</option>
+                                <option value="all">the beginning of time</option>
+                            </select>
+                                <div id="pieContainer" style="min-width: 310px; height: 400px; margin: 0 auto;"></div>
+                        </div>
+                        <div class="span7" style="padding:3px 3px 3px 3px; background-color:white; border-radius:5px; margin-bottom:20px; border:2px solid black; box-shadow:3px 3px;">
+                            Find the past year of:
+                                @Html.DropDownList("orderYear", (SelectList)(ViewBag.orderYear), String.Empty, new { id = "lineChart" })
+                            <div id="LineChartcontainer" style="min-width: 310px; height: 400px; margin: 0 auto"></div>  
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

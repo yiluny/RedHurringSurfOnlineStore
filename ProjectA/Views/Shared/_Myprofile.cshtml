@@ -1,0 +1,101 @@
+﻿@{
+    ViewBag.Title = "Myprofile";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link href="@Url.Content("~/Content/personalInfo.css")" rel="stylesheet" media="screen" type="text/css" />
+<script>
+    $(function () {
+        var pathname = window.location.pathname;
+
+        if (pathname.indexOf("personalInfo") > -1) {
+            $("#personalInfo").addClass("active");
+        } else if (pathname.indexOf("orderManagement") > -1) {
+            $("#orderManagement").addClass("active");
+        } else if (pathname.indexOf("changePassword") > -1) {
+            $("#changePassword").addClass("active");
+        }
+        $(".active a").css("color", "#c40202");
+    });
+
+</script>
+
+
+@{
+    
+    if (HttpContext.Current.Request.Cookies["User"] != null)
+    {
+        String userName = HttpContext.Current.Request.Cookies["User"].Values.Get(0);
+    }
+    else
+    {
+        String userName = Convert.ToString(Session["LoginUser"]);
+    }
+  
+    if (@ViewBag.modifiedState == "success")
+    {
+    <h2 style="color: green;">Successfully modified ! </h2>
+    }
+    else if (@ViewBag.modifiedState == "fail")
+    {
+    <h2 style="color: red;">Modification fails</h2>
+    }
+    
+}
+
+
+
+<div class="container-fluid">
+    <div class="row-fluid" style="margin-left:50px;">
+        <div class="span3" id="personalInfoSelection">
+            <ul class="nav nav-stacked">
+                <li id="personalInfo">
+                    @if (HttpContext.Current.Request.Cookies["User"] != null)
+                    {
+                        String userName = HttpContext.Current.Request.Cookies["User"].Values.Get(0); 
+                        
+                        <a href="@Url.Action("personalInfo", "myProfile", new { userName = userName })" style="height:45px;line-height: 45px;overflow: hidden;text-indent:10px;">Personal Information</a>
+                    }
+                    else if (Session["LoginUser"] != null)
+                    {
+                        <a href="@Url.Action("personalInfo", "myProfile", new { userName = Session["LoginUser"] })" style="height:45px;line-height: 45px;overflow: hidden;text-indent:10px;">Personal Information</a>
+                    }
+                </li>
+
+                <li id="orderManagement">
+                    @if (HttpContext.Current.Request.Cookies["User"] != null)
+                    {
+                        String userName = HttpContext.Current.Request.Cookies["User"].Values.Get(0);
+                        <a href="@Url.Action("orderManagement", "myProfile", new { userName = userName })" style="height:45px;line-height: 45px;overflow: hidden; text-indent:10px;">Order Management</a>
+                    }
+                    else if (Session["LoginUser"] != null)
+                    {
+                        <a href="@Url.Action("orderManagement", "myProfile", new { userName = Session["LoginUser"] })" style="height:45px;line-height: 45px;overflow: hidden; text-indent:10px;">Order Management</a>
+                    }
+
+                </li>
+
+                <li id="changePassword">
+                    @if (HttpContext.Current.Request.Cookies["User"] != null)
+                    {
+                        String userName = HttpContext.Current.Request.Cookies["User"].Values.Get(0);
+                        <a href="@Url.Action("changePassword", "myProfile", new { userName = userName })" style="height:45px;line-height: 45px;overflow: hidden; text-indent:10px;">Change Password</a>
+                    }
+                    else if (Session["LoginUser"] != null)
+                    {
+                        <a href="@Url.Action("changePassword", "myProfile", new { userName = Session["LoginUser"] })" style="height:45px;line-height: 45px;overflow: hidden; text-indent:10px;">Change Password</a>
+                    }
+                    
+                </li>
+
+            </ul>
+        </div>
+
+
+        <div class="span9" id="content">
+            @RenderBody()
+        </div>
+    </div>
+
+
+</div>
+

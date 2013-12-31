@@ -1,0 +1,79 @@
+﻿@model IEnumerable<ProjectA.Models.SubCategory>
+<script src="@Url.Content("~/Scripts/jquery_nav.js")" type="text/javascript"></script>
+<DIV id=nav_wrap class="row-fluid">
+<DIV id=nav class="row-fluid">
+<DIV class=l></DIV>
+<UL class=c>
+  <LI><SPAN class=v><a href="@Url.Action("Index", "Home")" class="nav">Home </a></SPAN> 
+  <DIV class=kind_menu style="LEFT:50px"> </DIV></LI>
+  
+
+        @foreach (var MainCategory in ViewBag.MainCategories)
+        {
+            if (MainCategory == "Shoes")
+            {
+                <li><SPAN class=v>@Html.ActionLink("Shoes","Browse", "Product", new { SubCategoryId = 70 }, null)</SPAN></li>
+            }
+            else if (MainCategory == "Mens tee")
+            {
+                <li><SPAN class=v>@Html.ActionLink("Mens tee","Browse", "Product", new { SubCategoryId = 69 }, null)</SPAN></li>
+            }
+            else if (MainCategory == "Backpacks")
+            {
+                <li><SPAN class=v>@Html.ActionLink("Backpacks","Browse", "Product", new { SubCategoryId = 68 }, null)</SPAN></li>
+            }
+            
+            else
+            {
+                <li><SPAN class=v><a href="#" onclick="return false" style="cursor: default" class="nav" target="_blank">@MainCategory</a></SPAN>
+                    <ul class="kind_menu">
+                        @foreach (var SubCategory in Model)
+                        {
+                            if (SubCategory.MainCategoryName == MainCategory)
+                            {
+                            <li><a>@Html.ActionLink(SubCategory.SubcategoryName, "Browse", "Product", new { SubCategoryId = SubCategory.SubCategoryId }, null)</a></li>
+                            }
+                        }
+                    </ul>
+                </li>
+            }
+            <li class="divider"></li>
+    }
+  </UL>
+</DIV><!--nav-->
+
+</DIV><!--nav_wrap-->
+<SCRIPT type=text/javascript>
+    var site_url = window.location.href.toLowerCase();
+    switch (true) {
+        default:
+            $("#nav li").attr("class", "");
+            $("#nav li").eq(0).attr("class", "nav_lishw");
+            $(".nav_lishw .v a").attr("class", "sele");
+            $(".nav_lishw .kind_menu").show();
+    }
+    $("#nav li").hover(
+		function () {
+		    clearTimeout(setTimeout("0") - 1);
+		    $("#nav .kind_menu").hide();
+		    $("#nav li .v .sele").attr("class", "shutAhover");
+		    $(this).attr("id", "nav_hover")
+		    $("#nav_hover .v a").attr("class", "sele");
+		    $("#nav_hover .kind_menu").show();
+		},
+		function () {
+
+		    if ($(this).attr("class") != "nav_lishw") {
+		        $("#nav_hover .v .sele").attr("class", "");
+		        $("#nav_hover .kind_menu").hide();
+		    }
+		    $(this).attr("id", "")
+		    $("#nav li .v .shutAhover").attr("class", "sele");
+		    setTimeout(function () {
+		        $(".nav_lishw .kind_menu").show();
+		        $(".nav_lishw .v a").attr("class", "sele");
+		    }, 50);
+		}
+	);
+
+</SCRIPT>

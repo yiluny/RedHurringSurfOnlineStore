@@ -1,0 +1,121 @@
+﻿.futura {
+    font-family: 'Futura';
+}
+
+.hidden-font {
+    font-size: 0;
+    line-height: 0;
+    text-indent: -9999px;
+    display: block;
+}
+
+.contents {
+    margin: 0 auto;
+    width: 1200px;
+    /*background: url('./themes/base/images/contents-bg1.png') repeat-y center top;*/
+    background-color:#303030;
+}
+
+#feedback {
+    display: block;
+    background: url('./themes/base/images/feedback.png') no-repeat;
+    width: 52px;
+    height: 179px;
+    position: fixed;
+    top: 140px;
+    left: 0;
+}
+
+#feedback span {
+    display: none;
+}
+
+
+/* Footer */
+
+#footer .contents {
+    width: 1170px;
+    padding: 0px 65px;
+}
+
+#footer div#footer-links {
+    padding: 0px 20px 0px 35px;
+    color: #ca005c;
+    overflow: hidden;
+    height: 1%;
+    position: relative;
+    z-index: 5;
+}
+
+#footer div#footer-links ul {
+    float: left;
+    width: 180px;
+}
+
+#footer div#footer-links ul#join-us {
+    width: 140px;
+}
+
+#footer div#footer-links ul li {
+    padding-bottom: 6px;
+    height: 1%;
+}
+
+#footer div#footer-links ul li.first {
+    padding-bottom: 10px;
+    display: block;
+    padding-left: 13px;
+    background: url("./themes/base/images/elements.png") no-repeat scroll -572px -67px transparent;
+    padding-bottom: 1px !important;
+}
+
+#footer div#footer-links span {
+    font-size: 1.05em;
+}
+
+#footer div#footer-links a {
+    display: block;
+    color: #9c9c9c;
+    font-size: 0.8em;
+    padding-left: 13px;
+    padding-bottom: 1px !important;
+}
+
+#footer div#footer-links a:hover, #footer div#footer-links a:active {
+    text-decoration: none;
+    color: #ca005c;
+}
+
+#footer div#footer-links ul#join-us a {
+    padding: 0 0 0 17px;
+}
+
+#footer div#footer-links ul#join-us a.fb {
+    background: url("./themes/base/images/elements.png") no-repeat scroll -757px -65px transparent;
+}
+
+#footer div#footer-links ul#join-us a.tweet {
+    background: url("./themes/base/images/elements.png") no-repeat scroll -757px -29px transparent;
+}
+
+#footer div#footer-links ul#join-us a.rss {
+    background: url("./themes/base/images//elements.png") no-repeat scroll -757px -45px transparent;
+}
+
+#footer div#footer-links ul#join-us a.yt {
+    background: url("./themes/base/images/yticon.png") no-repeat scroll 0 0 transparent;
+}
+
+#footer div#footer-links ul#join-us a.gp {
+    background: url("./themes/base/images/gplus.png") no-repeat scroll 0 0 transparent;
+}
+
+.logo_img {
+    border: 0;
+    margin: 0;
+    padding: 0;
+    max-width: 150px;
+    width: expression(this.width>100?"100px":this.width);
+    max-height: 150px;
+    height: expression(this.height>100?"  100px":this.height);
+}

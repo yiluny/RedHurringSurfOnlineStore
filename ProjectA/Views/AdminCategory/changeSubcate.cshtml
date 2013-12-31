@@ -1,0 +1,120 @@
+﻿@*@model IEnumerable<ProjectA.Models.SubCategory>
+*@
+
+@model ProjectA.ViewModels.UpdateCategoryViewModel
+
+<script src="@Url.Content("~/Scripts/jquery-1.7.1.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+
+
+        $('#addMoreSubcategory').click(function () {
+
+            var index = $("#newSub li[id^=input]").length;
+
+            $("#newSub").append('<li id="input' + index + '" style="width:240px;"><input type="text" id="field' + index + '" name="newSubCate[' + index + ']" /> <button type="button" class="close" id="delRow' + index + '" name="delRow' + index + '"  onclick="removeRow(' + index + ')" style="margin-left:0px;">&times;</button> </li>');
+
+        });
+
+    });
+
+
+    function removeRow(index) {
+
+        $("#newSub").find('#input' + index).remove();
+
+        $("li[id^=input]").each(function (i) {
+            $(this).attr("id", "input" + i);
+
+            $(this).find("input[id^=field]").attr("name", "newSubCate[" + i + "]").attr("id", "field" + i);
+            $(this).find("button[id^=delRow]").attr("name", "delRow" + i).attr("id", "delRow" + i).attr("onclick", "removeRow(" + i + ")").addClass("close")
+        });
+
+    }
+
+</script>
+
+<h5>Sub Category List: </h5>
+@using (Html.BeginForm("updateSubcate", "AdminCategory", FormMethod.Post))
+{
+    
+    <div id="subcategory" style="margin-left:50px;">
+        <table id="subcategoryList" style="line-height: 20px;">
+
+            @{
+
+                for (int i = 0; i < Model.existingData.Count(); i++)
+                {
+                    <tr>
+                        @if (!Model.existingData[i].SubcategoryName.Equals(Model.existingData[i].MainCategoryName))
+                        {
+                            <td>
+                                    @Html.HiddenFor(model => model.existingData[i].MainCategoryName)
+                                    @Html.HiddenFor(model => model.existingData[i].SubCategoryId)
+
+                                    @Html.TextBoxFor(model => model.existingData[i].SubcategoryName)
+                                    @Html.ValidationMessageFor(model => model.existingData[i].SubcategoryName)
+                            </td>
+
+                            <td style="margin-right: 20px;">
+                                <a class="close" id="delSubcate@(i)" href="#modal-container-@(i)" role="button" data-toggle="modal" >&times;</a>
+                            </td>
+                         }
+                        <td>
+
+                            <form id="confirmDelete" action="@Url.Action("deleteSubCatAndProducts", "AdminCategory", new { subCategoryId = Model.existingData[i].SubCategoryId, MainCategoryName =Model.existingData[i].MainCategoryName, SubcategoryName=Model.existingData[i].SubcategoryName })" method="post">
+                            <div id="modal-container-@(i)" class="modal hide fade" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                    <h3 id="myModalLabel">Attention
+                                    </h3>
+                                </div>
+                                <div class="modal-body">
+                                    <p>
+                                        Are you sure that you want to delete @(Model.existingData[i].SubcategoryName)
+                                        and products under it permanently?
+                                    </p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button class="btn" data-dismiss="modal" aria-hidden="true">No</button>
+                                    <input class="btn btn-primary" type="submit" value="Yes" />
+                                    
+                                </div>
+                            </div>
+                            
+                             </form>
+
+                        </td>
+                    </tr>
+                
+    }
+            }
+
+        </table>
+
+        <ul id="newSub">
+        </ul>
+
+    </div>
+    
+    <div class="row-fluid">
+        <div class="span12" style="padding-left:30px;">
+            <button class="btn btn-success" id="addMoreSubcategory" type="button">add more</button>
+
+            <button class="btn btn-success"  type="submit" name="mainCategoryName" value="@(Model.existingData[0].MainCategoryName)">Update</button>
+        </div>
+    </div>
+
+}
+
+
+
+
+
+

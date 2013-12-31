@@ -1,0 +1,29 @@
+﻿#map_canvas { 
+	height:500px;
+	width:350px; 
+	float:left;
+	position:relative;
+    margin: 0px 30px 20px 30px;
+}
+
+.location_name {
+    left:50px;
+    width: 100px;
+    height:400px;
+    font-size:20px;
+    padding: 30px 30px 20px 80px;
+    border-right: solid 1px black;
+    float:left;
+}
+
+#shopName {
+    font-size:20px;
+}
+
+#shopDescription {
+    font-size:15px;
+}
+
+shopOpenTime {
+    font-size:15px;
+}

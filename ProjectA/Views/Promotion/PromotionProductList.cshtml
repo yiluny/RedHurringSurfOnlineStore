@@ -1,0 +1,130 @@
+﻿@using Webdiyer.WebControls.Mvc;
+@model PagedList<ProjectA.Models.ProductDB>
+
+@helper Truncate(string input, int length)
+{
+    if (input.Length <= length)
+    {
+    @input
+    }
+    else
+    {
+    @input.Substring(0, length)<text>...</text>
+    }
+}
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        $('#productShow ul li a').each(function (i) {
+            var id = $(this).attr("id");
+
+
+            $('#' + id).find("div").html('<img src="@Url.Content("~/Content/themes/base/images/spinningWheel.gif")" style="width:100%"; height:70%;  />');
+
+
+
+            $.get("/Home/GetImage", { "id": id },
+                    function (data) {
+                        try {
+                            $('#productShow ul li #' + id).find("div").html('<img id="' + id + '\_productList' + '\" src="/Home/GetImage?id=' + id + '\"/>');
+                            var img = new Image();
+                            img.src = $('#' + id + '_productList').attr('src');
+                            img.onload = function () {
+                                var H = this.height,
+                                    W = this.width;
+
+                                if (241 / H < 295 / W) {
+
+                                    W = W * 241 / H;
+                                    H = 241;
+                                }
+                                else if (295 / W > 241 / H) {
+
+                                    H = H * 295 / W;
+                                    W = 295;
+                                }
+                                $('#' + id + '_productList').css('width', W + "px", 'height', H + 'px');
+                            }
+                        }
+                        catch (Ex) {
+                            alert(Ex.message);
+                        }
+                    });
+        });
+    });
+
+</script>
+
+<div class="container-fluid" id="promotions">
+	<div class="row-fluid" id="productRows">
+		<div class="span12">
+			<ul class="breadcrumb">
+				<li>
+					<a href="@Url.Action("Index","Home")">Home</a> <span class="divider">/</span>
+				</li>
+				<li class="active">
+					@(Model.FirstOrDefault().MainCategory)
+				</li>
+			</ul>
+
+			<div class="row-fluid" id="productShow">
+				<ul class="thumbnails row-fluid">
+                        
+                        @foreach (var product in Model)
+                        {
+                            <li class="span4 row-fluid thumbnail" style="margin-top: 30px;width:295px;">
+                                <a href="@Url.Action("Details", "Product", new { id = product.productId })" id="@product.productId"  class="row-fluid" >
+
+                                    <div style="margin: auto; text-align: center; height:241px; ">
+                                    </div>
+                                    <h4 style="text-align: center;height:60px;">
+                                        <span>@Truncate(product.productName, 40) </span>
+                                        <br />
+                                        <h4 style="text-align: center;">Was <del>$ @product.productPrice</del></h4>
+                                        <h3 style="text-align: center; color: red;">Now $<span>@product.productPrice</span></h3>
+                                    </h4>
+
+                                </a>
+                            </li>
+                            
+
+                        }
+                            
+                    </ul>
+			</div>
+		</div>
+
+        <div class="span12" style="text-align:center;">
+            <div id="pagination" class="pagination">
+
+                @Html.AjaxPager(Model, new PagerOptions()
+                {
+                    PageIndexParameterName = "id",
+                    ContainerTagName = "ul",
+                    PagerItemWrapperFormatString = "<li>{0}</li>",
+                    CurrentPagerItemWrapperFormatString = "<li><a>{0}</a></li>",
+                    NumericPagerItemWrapperFormatString = "<li>{0}</li>",
+                    PrevPageText = "Prev",
+                    NextPageText = "Next",
+                    ShowDisabledPagerItems = false,
+                    AlwaysShowFirstLastPageNumber = true
+                }, new AjaxOptions { UpdateTargetId = "promotions" })
+
+            </div>
+
+            <div id="pageSelection">
+
+                <form action="Browse" method="get">
+
+                    <label for="list" style="display:inline-block;">per page</label>
+                    <input type="hidden" name="SubCategoryId" value="@Model.FirstOrDefault().SubCategoryId"  style="display:inline-block;" />
+                    @Html.DropDownList("itemPerPage", (SelectList)(ViewData["itemsPerPage"]), new { onchange = "this.form.submit();" })
+
+                </form>
+            </div>
+
+        </div>
+
+    </div>

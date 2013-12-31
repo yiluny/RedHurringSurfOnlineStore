@@ -1,0 +1,16 @@
+﻿@model Webdiyer.WebControls.Mvc.PagedList<ProjectA.Models.ProductDB>
+@using Webdiyer.WebControls.Mvc;
+@{ 
+    ViewBag.Title = "Product Lists";
+}
+    
+<link href="../../Content/Product.css" rel="stylesheet" media="screen" type="text/css" />
+
+<script type="text/javascript" src="/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+
+<script src="@Url.Content("~/Scripts/jquery-1.7.1.js")" type="text/javascript"></script>
+
+
+@{Html.RenderPartial("ProductList", Model); }
+
+

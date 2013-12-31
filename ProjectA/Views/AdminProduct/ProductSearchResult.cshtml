@@ -1,0 +1,9 @@
+﻿@model Webdiyer.WebControls.Mvc.PagedList<ProjectA.Models.ProductDB>
+@using Webdiyer.WebControls.Mvc;
+@{
+    ViewBag.Title = "ProductSearchResult";
+    Layout = "~/Views/Shared/AdminHome.cshtml";
+}
+<div id="content">
+    @{Html.RenderPartial("ProductSearchResultList", Model); }
+</div><br />

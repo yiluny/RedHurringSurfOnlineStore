@@ -1,0 +1,66 @@
+﻿@model ProjectA.ViewModels.ShoppingCartViewModel
+@helper Truncate(string input, int length)
+{
+    if (input.Length <= length)
+    {
+    @input
+    }
+    else
+    {
+    @input.Substring(0, length)<text>...</text>
+    }
+}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#test').mouseleave(function () {
+            $('#test').parent().slideUp(300);
+        });
+    });
+</script>
+
+
+<div class="container-fluid" style="margin:0;" id="test">
+    <div class="row-fluid">
+        <div class="span12">
+            <div class="page-header">
+                <h4 style="background-color: white; text-align: center; color: black;">Cart Summary
+                </h4>
+                <span class="pull-left" style="font-size: 14px;">Subtotal:&nbsp $@Model.CartTotal</span>
+                <a class="btn btn-success" style="margin-left:200px" href="@Url.Action("Index", "ShoppingCart")">View Shopping Cart</a>
+            </div>
+            <div style="overflow-y: scroll; height: 160px;">
+                <table style="width: 440px;">
+                    @foreach (var item in Model.CartItems)
+                    {
+                        <tr id="row-@item.RecordId" >
+
+                            <td id="product_img" class="pull-left">
+                                <a href="@Url.Action("Details", "Product", new { id = item.ProductId })">
+                                    <img alt="@item.Product.productName" src="@Url.Action("GetImage", "Home", new { id = item.Product.productId })"  style="height:100px; width:120px; border:none;" />
+                                </a>
+                            </td>
+
+                            <td id="product_name" style="font-size: 14px; width: 270px;" class="pull-left">
+                                <span class="pull-left"><a href="@Url.Action("Details", "Product", new { id = item.ProductId })">@Truncate(item.Product.productName, 35)</a></span>
+                                <br />
+                                @if (item.ProductSize != null)
+                                {
+
+                                    <span style="font-size: 14px;" class="pull-left">@item.ProductSize</span>
+                                    <br />
+                                }
+
+
+                                <span class="pull-left">@item.Count</span>
+                                <span class="pull-left">&nbsp X &nbsp</span>
+                                <span class="pull-left">$@string.Format("{0:0.00}", item.Product.productPrice)</span>
+
+                            </td>
+                        </tr>  
+                    }
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

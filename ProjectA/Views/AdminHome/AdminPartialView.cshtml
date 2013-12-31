@@ -1,0 +1,59 @@
+﻿<div class="row-fluid">
+    <div class="span12" id="AdminInfo">
+        Welcome back, @Session["Administrator"]
+    </div>
+</div>
+
+<div class="row-fluid">
+    <div class="span12" id="OtherInfo">
+        <ul class="nav nav-stacked nav-justified" id="InnerOtherInfo">
+            <li class="active">
+                <div class="row-fluid" style="margin-left: 10px;">
+                    <div class="span6">
+                        <a href="@Url.Action("Index","AdminProduct")" class="btn" style="width: 70px; height: 80px;">
+                            <span class="badge btn-success pull-right">@ViewBag.allProducts</span><br />
+                            <i class="icon-list icon-2x"></i>
+                            <br />
+                            <span style="font-family: 'Comic Sans MS'; font-size: 14px;">All Products</span>
+                        </a>
+
+                        <a href="@Url.Action("promotionProduct", "AdminProduct")" class="btn" style="width: 70px; height: 80px;">
+                            <span class="badge btn-success pull-right">@ViewBag.promotionProducts</span><br />
+                            <i class="icon-bullhorn icon-2x"></i>
+                            <br />
+                            <span style="font-family: 'Comic Sans MS'; font-size: 14px;">Promotion Products</span>
+                        </a>
+
+                        <a href="@Url.Action("AddNewProduct","AdminProduct")" class="btn" style="width: 70px; height: 80px;">
+                            <br />
+                            <i class="icon-plus-sign icon-2x "></i>
+                            <br />
+                            <span style="font-family: 'Comic Sans MS'; font-size: 14px;">Add A Product</span>
+                        </a>
+                    </div>
+                    <div class="span6">
+                        <a href="@Url.Action("Index","AdminCategory")" class="btn" style="width: 70px; height: 80px;">
+                            <span class="badge btn-success pull-right">@ViewBag.subcategories</span><br />
+                            <i class="icon-paste icon-2x"></i>
+                            <br />
+                            <span style="font-family: 'Comic Sans MS'; font-size: 14px;">Categories</span>
+                        </a>
+                        <a href="@Url.Action("Index","AdminCustomer")" class="btn" style="width: 70px; height: 80px;">
+                            <span class="badge btn-success pull-right">@ViewBag.users</span><br />
+                            <br />
+                            <i class="icon-group icon-2x"></i>
+                            <br />
+                            <span style="font-family: 'Comic Sans MS'; font-size: 14px;">Users</span>
+                        </a>
+                        <a href="@Url.Action("Index","AdminOrders")" class="btn" style="width: 70px; height: 80px;">
+                            <span class="badge btn-success pull-right">@ViewBag.unshippedOrders</span><br />
+                            <i class="icon-copy icon-2x"></i>
+                            <br />
+                            <span style="font-family: 'Comic Sans MS'; font-size: 14px;">Unshipped Orders</span>
+                        </a>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>

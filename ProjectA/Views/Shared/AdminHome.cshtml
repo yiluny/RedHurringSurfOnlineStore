@@ -1,0 +1,90 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Welcome to Administration Site!</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
+    <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
+    <script src="@Url.Content("~/Scripts/jquery-1.7.1.js")" type="text/javascript"></script>
+    <link href="@Url.Content("~/Content/bootstrap/bootstrap.css")" rel="stylesheet" type="text/css" />
+    <script src="@Url.Content("~/Scripts/bootstrap.js")" type="text/javascript"></script>
+
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css" />
+    <script src="http://code.jquery.com/ui/1.10.2/jquery-ui.js"></script>
+
+
+    <link href="@Url.Content("~/Content/AdminSite/Admin_Home.css")" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="row-fluid" id="heading">
+          <div id="pinedInfo">
+            <div class="span3" id="Logo">
+            </div>
+
+            <div class="span9" id="Navigation">
+                <ul class="nav nav-tabs">
+
+                    <li id="navHome">
+                        <a href="@Url.Action("Index", "AdminHome")">Home</a>
+                    </li>
+                    <li id="navOrders">
+                        <a href="@Url.Action("Index", "AdminOrders")">Orders</a>
+                    </li>
+                    <li id="navCustomers">
+                        <a href="@Url.Action("Index", "AdminCustomer")">Customers</a>
+                    </li>
+                    <li id="navProducts">
+                        <a href="@Url.Action("Index", "AdminProduct")">Products</a>
+                    </li>
+                    <li id="navCategory">
+                        <a href="@Url.Action("Index", "AdminCategory")">Category</a>
+                    </li>
+                </ul>
+            </div>
+           </div>
+        </div>
+
+        <div class="row-fluid" id="MainBody">
+
+            <div class="span2" id="Info">
+               @{Html.RenderAction("AdminPartialView", "AdminHome");}
+            </div>
+
+            <div class="span10" id="contentBody">
+                @RenderBody()
+            </div>
+
+        </div>
+    </div>
+    <script src="@Url.Content("~/Scripts/jquery.pin.js")"></script>
+    <script>
+        $(function () {
+            var pathname = window.location.pathname;
+
+            if (pathname.indexOf("Customer") > -1) {
+                $("#navCustomers").addClass("active");
+            } else if (pathname.indexOf("Order") > -1) {
+                $("#navOrders").addClass("active");
+            } else if (pathname.indexOf("Product") > -1) {
+                $("#navProducts").addClass("active");
+            } else if (pathname.indexOf("Category") > -1) {
+                $("#navCategory").addClass("active");
+            } else {
+                $("#navHome").addClass("active");
+            }
+
+            $("#pinedInfo").pin({
+                minWidth: 1250
+            });
+
+        });
+    </script>
+</body>
+</html>

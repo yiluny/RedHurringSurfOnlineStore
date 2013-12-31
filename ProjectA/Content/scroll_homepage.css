@@ -1,0 +1,428 @@
+﻿.first_container {
+    width: 1000px;
+    height:1150px;
+}
+
+
+/*------------------left_container------*/
+.left_container {
+   width: 190px;
+   height:1150px;
+   position: relative;
+   float: left;
+   margin-top:5px;
+}
+/*------------------info_1-------------*/
+.info_1 {
+    width: 190px;
+    height: 295px;
+    position: relative;
+    float: left;
+    box-shadow:black 2px 2px 2px; 
+    background: url(./themes/base/images/signin_n.png); 
+}
+
+
+#info_button {
+    position:absolute; 
+    bottom:10px;
+    padding-left:10px;
+}
+
+
+/*------------------voucher-------------*/
+.view-back {
+    width: 190px;
+    height: 295px;
+    position: relative;
+    margin-top:10px;
+    float: left;
+    background-image:url(./themes/base/images/voucher.png);
+    box-shadow:black 2px 2px 2px;  
+}
+
+
+
+.google {
+    width: 190px;
+    height: 275px;
+    float:left;
+    margin-top:10px;
+}
+
+.google a img {
+    width: 190px;
+    height: 260px;
+    cursor:pointer;
+    color:white; 
+    box-shadow:black 2px 2px 2px;  
+}
+
+
+.promotion {
+    width: 190px;
+    height: 230px;
+    float:left;
+    margin-top:10px;
+    box-shadow:black 2px 2px 2px;  
+}
+.promotion :hover{
+    box-shadow:none;  
+}
+.promotion a img {
+    width: 190px;
+    height: 230px;
+    cursor:pointer;
+    color:white; 
+}
+
+.view-back form {
+    margin:145px 0 0 0;  
+}
+
+.view-back span {
+	display: block;
+	float: left;
+	padding: 5px 0 5px 30px;
+	width: 100%;
+	text-align: left;
+	font-size: 16px;
+}
+
+/*------------------home_introduction-----*/
+.home_introduction {
+    width:310px;
+    height: 295px;
+    float: left;
+    position: relative;
+    margin-top:10px;
+    margin-left:10px;
+    box-shadow:black 2px 2px 2px;
+}
+/*----------------New Arrival-------------*/
+.newarrival {
+    width:800px;
+    height: 253px;
+    float: left;
+    position: relative;
+    margin-top:10px;
+    margin-left:10px;
+    box-shadow:black 2px 2px 2px;
+}
+
+.TopSales {
+    width:800px;
+    height: 253px;
+    float: left;
+    position: relative;
+    margin-top:10px;
+    margin-left:10px;
+    box-shadow:black 2px 2px 2px;
+}
+
+#wrap{
+    /*margin: 0 12%;*/
+    float: left;
+    position: relative;
+}
+
+ #wrap2{
+    /*margin: 0 12%;*/
+    float: left;
+    position: relative;
+}
+
+#wrap p{
+    text-align:center;
+    margin:0;
+    font-size:large;
+    font-family:Arial Black;
+}
+
+#wrap2 p{
+    text-align:center;
+    
+    font-size:large;
+    font-family:Arial Black;
+}
+#wrap li {
+    float: left;
+    cursor: pointer;
+  
+}
+
+#wrap2 li{
+    float: left;
+    cursor: pointer;
+}
+#wrap ul ol {
+    margin-left:0;
+}
+
+#wrap2 ul ol{
+     margin-left:0;
+}
+
+#wrap ul ul{
+    margin-bottom: 20px;
+}
+
+#wrap2 ul ul {
+    margin-bottom: 20px;
+}
+
+
+
+.newarrival a div, .TopSales a div{
+    height:85%;
+}
+.newarrival a span, .TopSales a span {
+    height:15%;
+}
+
+.newarrival a, .TopSales a{
+    color: #4088b8;
+    width:100%;
+    text-align:center;
+}
+
+
+.newarrival a img:hover {
+    opacity:0.6;
+}
+
+.jcarousel-skin-tango .jcarousel-direction-rtl {
+	direction: rtl;
+}
+
+.jcarousel-skin-tango .jcarousel-container-horizontal {
+    width: 740px;
+    padding: 20px 30px;
+
+}
+
+.jcarousel-skin-tango .jcarousel-clip {
+    overflow: hidden;
+}
+
+.jcarousel-skin-tango .jcarousel-clip-horizontal {
+    width:  740px;
+}
+
+.jcarousel-skin-tango .jcarousel-item {
+    width: 150px;
+    height: 180px;
+    
+}
+
+.jcarousel-skin-tango .jcarousel-item-horizontal {
+	margin-left: 15px;
+    margin-right: 20px;
+}
+
+.jcarousel-skin-tango .jcarousel-direction-rtl .jcarousel-item-horizontal {
+	margin-left: 10px;
+    margin-right: 0;
+}
+
+.jcarousel-skin-tango .jcarousel-item-placeholder {
+    color: #000;
+}
+
+/**
+ *  Horizontal Buttons
+ */
+.jcarousel-skin-tango .jcarousel-next-horizontal {
+    position:absolute;
+    top: 60px;
+    width: 19px;
+    height: 50px;
+    cursor: pointer;
+    background: url(./themes/base/images/arrows.png) no-repeat 0 0;
+    z-index:100;
+    cursor: pointer;
+    opacity:0.1;
+    right: 0;
+    float:right;
+    background-position: right center;
+}
+
+
+.jcarousel-skin-tango .jcarousel-next-horizontal:hover, 
+.jcarousel-skin-tango .jcarousel-next-horizontal:focus {
+    opacity:1;
+}
+
+.jcarousel-skin-tango .jcarousel-next-horizontal:active {
+    opacity:0.5;
+}
+
+
+.jcarousel-skin-tango .jcarousel-prev-horizontal {
+    position: absolute;
+    top: 60px;
+    left: 0px;
+    width: 19px;
+    height: 50px;
+    cursor: pointer;
+    background: url(./themes/base/images/arrows.png) no-repeat 0 0;
+    z-index:1000;
+    cursor: pointer;
+    opacity:0.1;    
+    background-position: left center;
+}
+
+.jcarousel-skin-tango .jcarousel-prev-horizontal:hover, 
+.jcarousel-skin-tango .jcarousel-prev-horizontal:focus {
+    opacity:1;
+}
+
+.jcarousel-skin-tango .jcarousel-prev-horizontal:active {
+    opacity:0.5;
+}
+
+
+/*---------------top sales-------------------*/
+#TopSales {
+    width: 800px;
+    height: 245px;
+    position: relative;
+    box-shadow:black 2px 2px 2px;
+    float: left;
+    margin-top:10px;
+    margin-left:10px;
+}
+
+#TopSales a img:hover {
+    opacity:0.6;
+}
+/*.topsales li {
+    float: left;
+    padding: 0 10px 0 10px;
+    cursor: pointer;
+}*/
+
+
+/*---------------scroll_homepage----------*/
+.clearfix:after {
+    content: ".";
+    display: block;
+    height: 0;
+    clear: both;
+    visibility: hidden;
+}
+
+.clearfix {
+    zoom: 1;
+}
+
+ul, li {
+    list-style: none;
+}
+
+img {
+    border:0px;
+}
+
+.wrapper {
+    width: 800px;
+    margin-top: 5px;
+    position: relative;
+    float: left;
+}
+.wrapper div ul li {
+    left:-25px;
+}
+
+
+
+
+
+/* focus */
+#focus {
+    width: 800px;
+    height:295px;
+    overflow: hidden;
+    position: relative;
+    margin-left:10px;
+    box-shadow:black 2px 2px 2px;
+}
+
+#focus ul {
+    height: 380px;
+    position: absolute;
+}
+
+#focus ul li {
+    float: left;
+    width: 800px;
+    height: 280px;
+    overflow: hidden;
+    position: relative;
+    background: #000;
+}
+
+#focus ul li a img{
+    width: 800px;
+    height: 280px;
+}
+
+#focus ul li div {
+    position: absolute;
+    overflow: hidden;
+}
+
+#focus .btnBg {
+    position: absolute;
+    width: 800px;
+    height: 20px;
+    left: 0;
+    bottom: 0;
+    background: #000;
+}
+
+#focus .btn {
+    position: absolute;
+    width: 780px;
+    height: 10px;
+    padding: 5px 10px;
+    right: 0;
+    bottom: 0;
+    text-align: right;
+    opacity:0.5;
+}
+
+#focus .btn span {
+    display: inline-block;
+    _display: inline;
+    _zoom: 1;
+    width: 25px;
+    height: 10px;
+    _font-size: 0;
+    margin-left: 5px;
+    cursor: pointer;
+    background: #f00;
+}
+
+#focus .btn span.on {
+    background: #fff;
+}
+
+#focus .preNext {
+    width: 45px;
+    height: 100px;
+    position: absolute;
+    top: 90px;
+    background: url(./themes/base/images/sprite.png) no-repeat 0 0;
+    cursor: pointer;
+}
+
+#focus .pre {
+    left: 0;
+}
+
+#focus .next {
+    right: 0;
+    background-position: right top;
+}
+

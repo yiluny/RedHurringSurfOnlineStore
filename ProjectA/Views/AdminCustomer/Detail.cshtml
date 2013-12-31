@@ -1,0 +1,138 @@
+﻿@model ProjectA.Models.Register
+
+@*@{
+    ViewBag.Title = "Detail";
+    Layout = "~/Views/Shared/AdminHome.cshtml";
+}*@
+
+<script type="text/javascript">
+    function getUserDetail(userId)
+    {
+
+        $('#dialog_simple_'+userId).dialog('open');
+
+        $('#dialog_simple_'+ userId).dialog({
+            autoOpen: false,
+            width: 600,
+            buttons: {
+                "Ok": function () {
+                    $(this).dialog("close");
+                }
+            }
+        });
+    }
+</script>
+<h4>User Detail: @Model.userName</h4>
+
+<div id="UserDetailAdmin" class="span12" style="text-align:left; padding:20px;">
+        <ul style="list-style-type:none;">
+            <li>
+                <div class="editor-label">
+                    User Name
+                </div>
+               
+                <div class="editor-field">
+                    @Html.TextBoxFor(model => model.userName,new {@readonly = "readonly" })
+                </div>
+            </li>
+
+            <li style="display:inline-block;">
+                <div class="editor-label">
+                    First Name
+                </div>
+                <div class="editor-field">
+                    @Html.TextBoxFor(model => model.firstName,new {@readonly = "readonly" })
+                </div>
+            </li>
+
+            <li style="display:inline-block;">
+                <div class="editor-label">
+                    Last Name
+                </div>
+                <div class="editor-field">
+                    @Html.TextBoxFor(model => model.lastName,new {@readonly = "readonly" })
+                </div>
+            </li>
+
+            <li style="padding-top:2px;">
+                <div class="editor-label">
+                    Email<em>*</em>
+                </div>
+                <div class="editor-field">
+                    @Html.TextBoxFor(model => model.email,new {@readonly = "readonly" })
+                </div>
+            </li>
+
+            <li style="display:inline-block; margin-right:20px;">
+                <table>
+                    <tr>
+                        <td style="height:55px;padding-right:20px;">
+                            <div class="editor-label">
+                                State<em>*</em>
+                            </div>
+                            <div class="editor-field">
+                                @Html.TextBoxFor(model => model.state,new {@readonly = "readonly" })
+                            </div>
+                        </td>
+
+                        <td style="height:55px; padding-right:20px;">
+                            <div class="editor-label">
+                                City<em>*</em>
+                            </div>
+                            <div class="editor-field">
+                                @Html.TextBoxFor(model => model.city,new {@readonly = "readonly" })
+                            </div>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td style="height:55px; padding-right:20px;">
+                            <div class="editor-label">
+                                Suburban/Town<em>*</em>
+                            </div>
+                            <div class="editor-field">
+                                @Html.TextBoxFor(model => model.suburban,new {@readonly = "readonly" })
+                            </div>
+                        </td>
+
+                        <td>
+                            <div class="editor-label">
+                                Post Code<em>*</em>
+                            </div>
+                            <div class="editor-field">
+                                @Html.TextBoxFor(model => model.postcode, new { style = "width:100px", @readonly = "readonly"})
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </li>
+
+            <li>
+                @Html.LabelFor(model => model.addressLine1)
+                @Html.TextBoxFor(model => model.addressLine1, new { style = "width:250px",@readonly = "readonly" })<br />
+                @Html.TextBoxFor(model => model.addressLine2, new { style = "width:250px",@readonly = "readonly" })<br />
+                            
+            </li>
+
+            <li>
+                <div class="editor-label">
+                    @Html.LabelFor(model => model.phone)
+                </div>
+                <div class="editor-field">
+                    @Html.TextBoxFor(model => model.phone,new {@readonly = "readonly" })
+                </div>
+            </li>
+
+            <li>
+                <div class="editor-label">
+                    @Html.LabelFor(model => model.birthday)
+                </div>
+                <div class="editor-field">
+                    @Html.TextBoxFor(model => model.birthday, new { @readonly = "readonly" , @Value = Model.birthday.Value.ToString("dd/MM/yyyy") })
+                </div>
+            </li>
+
+
+        </ul>
+    </div>
+    

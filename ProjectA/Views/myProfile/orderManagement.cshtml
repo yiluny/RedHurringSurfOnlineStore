@@ -1,0 +1,11 @@
+﻿@model Webdiyer.WebControls.Mvc.PagedList<DateTime>
+@using Webdiyer.WebControls.Mvc;
+@{ 
+    ViewBag.Title = "orderManagement";
+   Layout = "~/Views/Shared/_Myprofile.cshtml";
+ }
+
+<script type="text/javascript" src="/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+<div>
+    @{Html.RenderPartial("orderManagementList", Model); }
+</div>

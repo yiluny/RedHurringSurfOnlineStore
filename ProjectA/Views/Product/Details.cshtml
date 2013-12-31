@@ -1,0 +1,381 @@
+﻿@model ProjectA.Models.ProductDB
+@{
+    ViewBag.Title = "Details";
+}
+
+
+<link rel="stylesheet" href="@Url.Content("~/Content/productDetails.css")" />
+
+<script type="text/javascript" src="@Url.Content("~/Scripts/ProductDetails/jquery.elevateZoom.js")"></script>
+
+<style>
+    /*set a border on the images to prevent shifting*/
+    #gallery_01 img {
+        border: 2px solid white;
+    }
+
+    /*Change the colour*/
+    .active img {
+        border: 2px solid #333 !important;
+    }
+</style>
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        //initiate the plugin and pass the id of the div containing gallery images
+        $("#zoom_03").elevateZoom({ gallery: 'gallery_01', cursor: 'pointer', galleryActiveClass: 'active', imageCrossfade: true, loadingIcon: 'http://www.elevateweb.co.uk/spinner.gif' });
+
+        //pass the images to Fancybox
+        $(".zoom_03").bind("click", function (e) {
+            var ez = $('#zoom_03').data('elevateZoom');
+
+            $.fancybox(ez.getGalleryList());
+            return false;
+        });
+
+        var img = new Image();
+        img.src = $('#zoom_03').attr('src');
+        img.onload = function () {
+            var H = this.height,
+                W = this.width;
+
+            if (292 / H < 384 / W) {
+
+                W = W * 292 / H;
+                H = 292;
+            }
+            else if (384 / W > 292 / H) {
+
+                H = H * 384 / W;
+                W = 384;
+            }
+            $('#zoom_03').css('width', W + "px", 'height', H + 'px');
+
+
+        }
+        $('#gallery_01').click(function () {
+            $('.zoomWrapper').css('margin', 'auto');
+        });
+        $(".addToCart").click(function () {
+            var quantity = parseInt($("#quantity").val());
+            var stock = parseInt($("#stockNumber").text());
+            var productId = $(this).attr("id");
+            var size = $("#size").val();
+
+            if (quantity > stock) {
+                $(".modal").addClass("in");
+                $(".modal").attr("aria-hidden", "false");
+                $(".modal").css("display", "block");
+                $("body").append("<div class='modal-backdrop fade in'></div>");
+            }
+            else {
+                //$("#addToCart").submit();
+                $.post("/../ShoppingCart/AddToCart", { "id": productId, "quantity": quantity, "size": size });
+                var currenCart = $("#cart-status").html().replace(/[^\d.]/g, '');
+                var cartNumber = parseInt(currenCart, 10);
+                var newCartNumber = cartNumber + quantity;
+                $("#cart-status").html("cart(" + newCartNumber + ")");
+
+                $("#cartSum").html('<img src="@Url.Content("~/Content/themes/base/images/spinningWheel.gif")" style="width:100px; height:100px; margin:auto; padding-top:100px;"/>');
+                $("#cartSum").load('@Url.Action("smallCart", "ShoppingCart")');
+                $("#cartSum").slideDown(300);
+                setTimeout(function () {
+                    if ($('#cartSum:hover').length == 0)
+
+                        $("#cartSum").slideUp(300);
+                }, 5000);
+            }
+        });
+        $("#closebtn").click(function () {
+            $(".modal").css("display", "none");
+            $(".modal-backdrop").remove();
+        });
+
+        $("#goAddToCart").click(function () {
+            $(".modal").css("display", "none");
+            $(".modal-backdrop").remove();
+            var quantity = parseInt($("#quantity").val());
+            var productId = $(".addToCart").attr("id");
+            var size = $("#size").val();
+
+            $.post("/../ShoppingCart/AddToCart", { "id": productId, "quantity": quantity, "size": size });
+            var currenCart = $("#cart-status").html().replace(/[^\d.]/g, '');
+            var cartNumber = parseInt(currenCart, 10);
+            var newCartNumber = cartNumber + quantity;
+            $("#cart-status").html("cart(" + newCartNumber + ")");
+
+            $("#cartSum").html('<img src="@Url.Content("~/Content/themes/base/images/spinningWheel.gif")" style="width:100px; height:100px; margin:auto; padding-top:100px;"/>');
+            $("#cartSum").load('@Url.Action("smallCart", "ShoppingCart")');
+            $("#cartSum").slideDown(300);
+            setTimeout(function () {
+                if ($('#cartSum:hover').length == 0)
+                    $("#cartSum").slideUp(300);
+            }, 5000);
+        });
+    });
+
+</script>
+
+<div id="modal-container-319080" class="modal hide fade" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+		<h3 id="myModalLabel">
+			Warning
+		</h3>
+	</div>
+	<div class="modal-body">
+		<p>
+			Delivery may take a longer time because of lack of storage, please Contact Red Herring phone service at (03) 6213 4555 for more detail.
+		</p>
+	</div>
+	<div class="modal-footer">
+			<button class="btn" id="closebtn" data-dismiss="modal" aria-hidden="true">Close</button> <button id="goAddToCart" class="btn btn-primary">Continue</button>
+	</div>
+</div>
+
+
+<div class="container-fluid" style="padding-bottom: 30px;">
+    <div class="row-fluid">
+        <div class="span12" style="">
+            <div class="row-fluid" style="background-color: #E5E4E2; border-radius: 5px;">
+                <div class="span5">
+                    <div class="box">
+                        @foreach (var img in Model.images)
+                        {
+                            if (img.IfCoverPic == true)
+                            {
+                            <div style="padding: 5px 5px 5px 5px; border: 1px solid black; box-shadow: 2px 2px; background-color: white; width: 384px; height: 292px; margin-bottom: 5px; text-align: center; margin: auto">
+                                <div style="text-align: center;">
+                                    <img id="zoom_03" src="@Url.Action("getProductImg", "Product", new { data = img.ImageId })" data-zoom-image="@Url.Action("getProductImg", "Product", new { data = img.ImageId })"/>
+                                </div>
+                            </div>
+                            }
+                        }
+                        <div id="gallery_01" style="max-width: 500px;">
+                            @foreach (var img in Model.images)
+                            {
+                                <a href="#" data-image="@Url.Action("getProductImg", "Product", new { data = img.ImageId })"data-zoom-image="@Url.Action("getProductImg", "Product", new { data = img.ImageId })">
+                                    <img class="img_01" src="@Url.Action("getProductImg", "Product", new { data = img.ImageId })" style="width:100px; height:67px;margin-bottom:5px; margin-top:3px;" />
+                                </a>
+                            }
+
+                        </div>
+                    </div>
+                </div>
+                <div class="span5">
+                    <div id="productDetails" style="float: left; position: relative; padding-left: 0 50px 0 100px; left: 7%">
+                        <header id="productHeader">
+                            <h3 itemprop="name">@Model.productName</h3>
+                            <br />
+
+                        </header>
+                        <!-- pageHeader -->
+
+                            @if (Model.SubCategory.SubcategoryName == "Shoes")
+                            {
+                                <label for="size" style="font-size: 14px; font-weight: bolder;">
+                                    <span style="margin-right: 58px;">Size:</span>
+                                    <select id="size" name="size">
+                                        <option value="7">7</option>
+                                        <option value="8">8</option>
+                                        <option value="9">9</option>
+                                        <option value="10">10</option>
+                                        <option value="11">11</option>
+                                    </select>
+                                </label>                
+                            }
+
+                            else if (Model.SubCategory.SubcategoryName == "Mens tee")
+                            {
+                                <label for="size" style="font-size: 14px; font-weight: bolder;">
+                                    <span style="margin-right: 58px;">Size:</span>
+                                    <select id="size" name="size">
+                                        <option value="small">small</option>
+                                        <option value="medium">medium</option>
+                                        <option value="large">large</option>
+                                        <option value="xlarge">xlarge</option>
+                                    </select>
+                                </label>
+                            }
+
+                            <label for="quantity" style="font-size: 16px; font-weight: bolder;">
+                                Quantity: 
+                        <select id="quantity" name="quantity" style="width: 150px; margin-left: 30px;">
+
+                            <option value="1">1</option>
+
+                            <option value="2">2</option>
+
+                            <option value="3">3</option>
+
+                            <option value="4">4</option>
+
+                            <option value="5">5</option>
+
+                            <option value="6">6</option>
+
+                            <option value="7">7</option>
+
+                            <option value="8">8</option>
+
+                            <option value="9">9</option>
+
+                            <option value="10">10</option>
+
+                        </select></label>
+                            <div id="productStockWrapper" class="group" style="font-size: 16px; font-weight: bolder;">
+                                <span id="stock" class="floatLeft" style="margin-right: 50px;">Stock:  </span>
+                                <span id="stockNumber" class="floatRight">@Model.stockNumber</span></div>
+                            <hr />
+                
+                            <div id="productPriceWrapper" class="group" style="font-size: 16px; font-weight: bolder;">
+                                <span id="priceTitle" class="floatLeft" style="margin-right: 18px;">Unit Price:  </span>
+                                <span id="productPrice" class="floatRight">$@Model.productPrice</span>
+                            </div>
+                            
+                            
+                            
+                            <span style="margin-left: 300px;">
+                                <input type="button" name="add" value="Add to Cart"  id="@Model.productId" class="addToCart btn btn-success" />
+                            </span>
+
+
+                        <!-- productOptions -->
+
+
+                    </div>
+                    <!-- productDetails -->
+                </div>
+                <div class="span2">
+                    <div style="float: right; width: 5px; height: 300px; margin-right: 80px;">
+                        <span class='st_sharethis_vcount' displaytext='ShareThis'></span>
+                        <span class='st_facebook_vcount' displaytext='Facebook'></span>
+                        <span class='st_twitter_vcount' displaytext='Tweet'></span>
+                        <span class='st_email_vcount' displaytext='Email'></span>
+                        <span class='st_youtube_vcount' displaytext='Youtube Subscribe'></span>
+
+                        <script type="text/javascript" src="http://w.sharethis.com/button/buttons.js"></script>
+                        <script type="text/javascript">stLight.options({ publisher: '68692bbf-10a5-4781-b25d-7a57e7efb805' });</script>
+                    </div>
+                </div>
+            </div>
+            <hr />
+
+
+            <div class="container-fluid">
+                <div class="row-fluid">
+                    <div class="span12">
+                        <div class="tabbable" id="tabs-806510">
+                            <ul class="nav nav-tabs">
+                                <li class="active">
+                                    <a href="#panel-565497" data-toggle="tab" style="font-family: 'Bodoni MT Poster'; font-size: 25px; color: white">Description</a>
+                                </li>
+                                <li>
+                                    <a href="#panel-961005" data-toggle="tab" style="font-family: 'Bodoni MT Poster'; font-size: 25px; color: white">Comment</a>
+                                </li>
+                                <li>
+                                    <a href="#panel-961006" data-toggle="tab" style="font-family: 'Bodoni MT Poster'; font-size: 25px; color: white">Deliver</a>
+                                </li>
+                                <li>
+                                    <a href="#panel-961007" data-toggle="tab" style="font-family: 'Bodoni MT Poster'; font-size: 25px; color: white">Returns/Exchanges</a>
+                                </li>
+                            </ul>
+                            <div class="tab-content" style="background-color: white;">
+                                <div class="tab-pane active" id="panel-565497">
+                                    <div id="productContent">
+                                        <div id="productDescription" style="position: relative; left: 0%; float: left;" class="textile" itemprop="description">
+                                            <blockquote>
+                                                <p style="font-size: 16px;"><span>@Html.Raw(Model.productDescription.Replace(Convert.ToString((char)13), "<br />"))</span></p>                           
+                                            </blockquote>
+                                        </div>
+                                        <!-- productDescription -->
+                                    </div>
+                                    <!-- productContent -->
+                                </div>
+                                <div class="tab-pane" id="panel-961005">
+                                    <div id="deliver">
+                                        <blockquote>
+                                            <div id="fb-root"></div>
+                                            <div class="fb-comments" data-href="@Request.Url.AbsoluteUri" data-width="880" data-num-posts="4"></div>
+                                            <script src="http://connect.facebook.net/en_US/all.js#xfbml=1"></script>
+
+                                            <hr />
+                                        </blockquote>
+                                    </div>
+                                </div>
+                                <div class="tab-pane" id="panel-961006">
+                                    <blockquote>
+                                        <div style="display: block;">
+                                            <h2>DELIVERY</h2>
+                                            <h4>Where does Red Herring online deliver?</h4>
+                                            <p style="margin-bottom: 20px;">Red Herring online delivers Australia wide.</p>
+                                            <h4>What forms of delivery does Red Herring online offer?</h4>
+                                            <p style="margin-bottom: 20px;">Red Herring online offers standard or priority shipping. Standard delivery orders are shipped by Australia Post and will be received within 2-7 business days after your order has been picked. Standard delivery may take longer in certain rural areas as well as in Western Australia. Priority delivery orders are shipped by Australia Post Express Post and will be generally be received the next business day after shipping.</p>
+                                            <h4>How much is delivery?</h4>
+                                            <p style="margin-bottom: 20px;">Standard delivery is $9 flat rate for all orders. Priority delivery is $14 flat rate for all orders.</p>
+                                            <h4>Does Red Herring ship internationally?</h4>
+                                            <p style="margin-bottom: 20px;">At this time Red Herring online does not ship outside of Australia.</p>
+                                            <h4>How will my order be shipped?</h4>
+                                            <p style="margin-bottom: 20px;">We have a network of postal services to get your order to you as quickly as possible. Our primary source of shipping is Australia Post eParcel, delivering to every corner of the country.</p>
+                                            <h4>Do I need to be home for my delivery?</h4>
+                                            <p style="margin-bottom: 20px;">A signature is required on delivery, so please provide a delivery address where someone will be available to receive your goods. A work address is often a good option. If no one is available to sign for the goods, an 'attempted delivery slip' will be left at your address advising your that the parcel will be delivered to the post office for pick up. It will also advise you which post office it is at (usually your local).</p>
+                                            <h4>Can you deliver to my work address?</h4>
+                                            <p style="margin-bottom: 20px;">In the rare case that we have missed an item from your order, please contact us and we will arrange for a replacement to be delivered straight away.</p>
+                                            <h4>Do you deliver to P.O. Box addresses?</h4>
+                                            <p style="margin-bottom: 20px;">Since we require a signature upon delivery, we cannot deliver to PO boxes. Please ensure that you provide a physical street address when completing your shipping details.</p>
+                                        </div>
+                                        <hr />
+                                    </blockquote>
+                                </div>
+                                <div class="tab-pane" id="panel-961007">
+                                    <div id="Returns/Exchanges">
+                                        <blockquote>
+                                            <div style="display: block;">
+                                                <h2>RETURNS/EXCHANGES</h2>
+                                                <h4>Do you offer returns?</h4>
+                                                <p style="margin-bottom: 20px;">Certainly - items purchased at Red Herring online may be returned for exchange or refund at Red Herring retail stores (excluding MYER stores and independent retailers).  Your online Tax Invoice must be presented at the time of refund or exchange. You will receive your Tax Invoice as your order confirmation email; this is different from the packing slip that is delivered with your ordered items.  If you are unable to visit a Red Herring retail store, simply follow the returns process outlined in this FAQ area.</p>
+                                                <h4>How do I return an item?</h4>
+                                                <p style="margin-bottom: 20px;">Contact us to receive a return authorisation, which will provide free return shipping of the goods to our returns centre. Pack all items with your Tax Invoice in a secure satchel/carton, or reuse the original packaging. Please ensure that all boxed items are enclosed in a satchel for protection or their return may be refused. Affix the pre-addressed label to your package, making sure you cover or remove the original shipping label. Send the satchel/ carton via Australia Post. Red Herring online will then gladly cover the cost of shipping your new product via return Australia Post.</p>
+                                                <h4>Can I return an item purchased online in store?</h4>
+                                                <p style="margin-bottom: 20px;">Certainly - items purchased at Red Herring online may be returned for exchange or refund at Red Herring retail stores (excluding MYER stores and independent retailers).  Your online Tax Invoice must be presented at the time of refund or exchange. You will receive your Tax Invoice as your order confirmation email; this is different from the packing slip that is delivered with your ordered items.</p>
+                                                <h4>What is the process for refunds?</h4>
+                                                <p style="margin-bottom: 20px;">
+                                                    Please contact us to initiate a refund.<br>
+                                                    <br>
+                                                    If you change your mind, goods must be returned within 30 days, unworn and unwashed with all labels/ tags attached. We will credit your original method of payment, excluding delivery (unless goods are faulty or not as ordered).<br>
+                                                    <br>
+                                                    We will provide you with a refund, exchange or credit voucher where goods are faulty, wrongly described, different from the style shown or do not do what they are supposed to.
+                                                </p>
+                                                <h4>How do I receive a return authorisation?</h4>
+                                                <p style="margin-bottom: 20px;">Contact us and we’ll send a return authorisation to you via email or fax you a copy.</p>
+                                                <h4>Do you pay for my return shipping?</h4>
+                                                <p style="margin-bottom: 20px;">We will gladly pay for your return shipping costs, additionally we will pay for the shipping for the new item to you.</p>
+                                                <h4>What about sale item returns?</h4>
+                                                <p style="margin-bottom: 20px;">We will happily refund or exchange sale items purchased from Red Herring online within 30 days. If the item is faulty, normal refund conditions apply.</p>
+                                            </div>
+                                            <hr />
+                                        </blockquote>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $('.active a').css("color", "#c40202");
+        $(".nav-tabs li").click(function () {
+            $(".nav-tabs li").not(this).removeAttr("id");
+            $(this).attr("id", "active");
+            $(".nav-tabs li").not(this).removeClass().find("a").css("color", "white");
+            $('#active a').css("color", "#c40202");
+
+        });
+    });
+</script>

@@ -1,0 +1,82 @@
+﻿@model ProjectA.Models.shopInfo
+@{
+    ViewBag.Title = "StoresInformation";
+}
+
+<h2>StoresInformation</h2>
+@using (Html.BeginForm())
+{   
+    <table id="storeview">
+        <tr>
+            <td>
+                 <div class="editor-label">
+                    @Html.LabelFor(model => model.shopName)
+                 </div>
+            </td>
+             <td>
+                <div class="editor-field">
+                    @Html.EditorFor(model => model.shopName)
+                    @Html.ValidationMessageFor(model => model.shopName)
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div class="editor-label">
+                    @Html.LabelFor(model => model.shopContactNum)
+                </div>
+            </td>
+            <td>
+                <div class="editor-field">
+                    @Html.EditorFor(model => model.shopContactNum)
+                    @Html.ValidationMessageFor(model => model.shopContactNum)
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div class="editor-label">
+                    @Html.LabelFor(model => model.shopAddress)
+                </div>
+            </td>
+            <td>
+                <div class="editor-field">
+                    @Html.TextAreaFor(Model => Model.shopAddress,new { cols = 75, @rows = 5 })
+                    @Html.ValidationMessageFor(model => Model.shopAddress)
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div class="editor-label">
+                    @Html.LabelFor(model => model.shopOpenTime)
+                </div>
+            </td>
+            <td>
+                <div class="editor-field">
+                    @Html.TextAreaFor(Model => Model.shopOpenTime,new { cols = 75, @rows = 5 })
+                    @Html.ValidationMessageFor(model => Model.shopOpenTime)
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div class="editor-label">
+                    @Html.LabelFor(model => model.shopDescription)
+                </div>
+            </td>
+            <td>
+                <div class="editor-field">
+                    @Html.TextAreaFor(Model => Model.shopDescription,new { cols = 75, @rows = 5 })
+                    @Html.ValidationMessageFor(model => Model.shopDescription)
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <input type="submit" value="Apply"/>
+            </td>       
+        </tr>
+    </table>
+}    
+<a data-trigger="confirm" href="/delete/me" class="btn">Launch demo confirm</a>

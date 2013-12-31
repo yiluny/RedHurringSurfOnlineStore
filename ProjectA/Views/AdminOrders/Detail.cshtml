@@ -1,0 +1,15 @@
+﻿@model Webdiyer.WebControls.Mvc.PagedList<ProjectA.Models.OrderDetail>
+@using Webdiyer.WebControls.Mvc;
+
+@{
+    ViewBag.Title = "Detail";
+    Layout = "~/Views/Shared/AdminHome.cshtml";
+}
+
+
+<div id="OrderDetailcontent">
+    @{Html.RenderPartial("OrderDetailList", Model); }
+</div><br />
+
+
+

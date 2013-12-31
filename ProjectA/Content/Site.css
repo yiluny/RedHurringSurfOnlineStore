@@ -1,0 +1,416 @@
+﻿/*body {
+    background-image:url(./themes/base/images/redherring_bg.jpg);
+}
+
+
+
+#header_top 
+{
+    background: url(./themes/base/images/nav_bg.gif) repeat-x  top;
+    color:whitesmoke;
+}
+
+
+#header_top  a{
+    color:whitesmoke;
+}
+
+
+
+#menu_tab {
+    height:100px;
+}
+
+
+
+#nav_wrap {
+    width: auto;
+    height:inherit;
+}
+
+
+
+#nav {
+    background: url(./themes/base/images/nav_bg.gif) repeat-x 2000px bottom;
+    height: 49px;
+    position: relative;
+    width: auto;
+    margin: 20px auto;
+}
+
+#nav .l {
+    height: 49px;
+    width: 30px;
+    float: left;
+    left:0;
+}
+
+#nav li {
+    float: left;
+    list-style: none;
+    text-align: center;
+    font-size: 14px;
+}
+
+#nav li .v a {
+    text-decoration: none;
+    width: 108px;
+    height: 49px;
+    line-height: 49px;
+    display: block;
+    color: #FFF;
+    float: left;
+    font-family: Arial,Verdana,Tahoma,"宋体";
+}
+
+#nav li .v a:hover, #nav li .v .sele {
+    background: url(./themes/base/images/nav_hover.png) no-repeat bottom;
+    color: #fff;
+    height: 49px;
+    line-height: 49px;
+    font-size: 14px;
+    padding-left: 0px;
+    z-index:100;
+}
+
+#nav .kind_menu {
+    height: 50px;
+    *height: 49px;
+    line-height: 50px;
+    vertical-align: middle;
+    position:absolute;
+    top: 46px;
+    *top: 48px;
+    width: 200px;
+    display: none;
+    color: #000;
+    font-size: 16px;
+
+    z-index:100;
+    padding:0px;
+    margin:0px;
+}
+
+#nav .kind_menu li {
+    height:55px;
+
+    background-color:#fff;    
+    filter:alpha(opacity=85);
+	-moz-opacity:0.85;
+	-khtml-opacity: 0.85;
+	opacity: 0.85;
+    border:0 1px 0 1px solid red;
+    -webkit-box-shadow:0 0 5px black;
+    -moz-box-shadow:0 0 5px black;
+    padding:5px;
+}
+
+#nav .kind_menu li a {
+    text-decoration: none;
+    color: #000;
+    float: left;
+    text-align: center;
+    width: 200px;
+    font-family: Arial,Verdana,Tahoma,"宋体";
+    font-size: 16px;
+    z-index:100;
+    margin-top:13px;
+}
+
+#nav .kind_menu li:hover {
+    color: #000;
+    border-bottom: 3px #a60000 solid;
+    z-index:100;
+}
+
+#nav .kind_menu span {
+    font-size: 16px;
+    color: #000;
+    line-height: 30px;
+    *line-height: 26px;
+    z-index:100;
+}
+
+
+
+footer {
+    position:absolute;
+    bottom:0;
+    height:300px;
+}*/
+
+
+
+
+
+body
+{
+    background-image:url(./themes/base/images/redherring_bg.jpg);
+    padding:0;
+    font-family:Arial, Helvetica, sans-serif;
+    font-size:11px;
+    margin:auto;
+    color:#000;
+}
+p
+{
+    padding:2px;
+    margin:0px;
+}
+#main_container
+{
+    max-width:1200px;
+    width:auto;
+    height:auto;
+    margin:auto;
+    padding:0px;
+}
+#header_top 
+{
+    width:100%;
+    height:25px;
+    font-size:small;
+    padding-right:initial;
+    background: url(./themes/base/images/nav_bg.gif) repeat-x  top;
+    color:whitesmoke;
+}
+
+#header_top  a{
+    color:whitesmoke;
+}
+
+
+#header_top_right 
+{
+    text-align:right;
+    float:right;
+    display:inline;
+    margin-right:15%;
+    padding-top:2px;
+}
+
+#header_top_left 
+{
+    text-align:left;
+    display:inline;
+    margin-left:15%;
+}
+
+
+#header
+{
+    width:1000px;
+    height:136px;
+    margin:auto;
+    z-index:1000;
+    border:none;
+}
+
+
+
+#header a:visited {
+    border:0px;
+
+}
+
+#header a:active {
+    border:0px;
+}
+
+img {
+    border:0px;
+}
+
+#main_content
+{
+    clear:both;
+    text-align:center;
+}
+
+
+#main {
+    max-width:1200px;
+    width:1200px;
+}
+
+
+.lang_text
+{
+    float:left;
+    padding:0 5px 0 0;
+}
+a.lang
+{
+    float:left;
+    padding:0 5px 0 5px;
+}
+
+
+
+/*---------------- menu tab----------------------*/
+#menu_tab {
+    height:100px;
+}
+
+
+
+
+#nav_wrap {
+    width: 1020px;
+    text-align:center;
+}
+
+
+
+#nav {
+    background: url(./themes/base/images/nav_bg.gif) repeat-x 2000px bottom;
+    height: 49px;
+    position: relative;
+    width: 1010px;
+    margin: 20px auto;
+}
+
+#nav .l {
+    height: 49px;
+    width: 30px;
+    float: left;
+    left:0;
+}
+
+#nav li {
+    float: left;
+    list-style: none;
+    text-align: center;
+    font-size: 14px;
+}
+
+#nav li .v a {
+    text-decoration: none;
+    width: 108px;
+    height: 49px;
+    line-height: 49px;
+    display: block;
+    color: #FFF;
+    float: left;
+    font-family: Arial,Verdana,Tahoma,"宋体";
+}
+
+#nav li .v a:hover, #nav li .v .sele {
+    background: url(./themes/base/images/nav_hover.png) no-repeat bottom;
+    color: #fff;
+    height: 49px;
+    line-height: 49px;
+    font-size: 14px;
+    padding-left: 0px;
+    z-index:100;
+}
+
+#nav .kind_menu {
+    height: 50px;
+    *height: 49px;
+    line-height: 50px;
+    vertical-align: middle;
+    position:absolute;
+    top: 46px;
+    *top: 48px;
+    width: 200px;
+    display: none;
+    color: #000;
+    font-size: 16px;
+
+    z-index:100;
+    padding:0px;
+    margin:0px;
+}
+
+#nav .kind_menu li {
+    height:55px;
+
+    background-color:#fff;    
+    filter:alpha(opacity=85);
+	-moz-opacity:0.85;
+	-khtml-opacity: 0.85;
+	opacity: 0.85;
+    border:0 1px 0 1px solid red;
+    -webkit-box-shadow:0 0 5px black;
+    -moz-box-shadow:0 0 5px black;
+    padding:5px;
+}
+
+#nav .kind_menu li a {
+    text-decoration: none;
+    color: #000;
+    float: left;
+    text-align: center;
+    width: 200px;
+    font-family: Arial,Verdana,Tahoma;
+    font-size: 16px;
+    z-index:100;
+    margin-top:13px;
+}
+
+#nav .kind_menu li:hover {
+    color: #000;
+    border-bottom: 3px #a60000 solid;
+    z-index:100;
+}
+
+#nav .kind_menu span {
+    font-size: 16px;
+    color: #000;
+    line-height: 30px;
+    *line-height: 26px;
+    z-index:100;
+}
+
+
+/*--------------footer----------------*/
+
+/*footer {
+    position:absolute;
+    bottom:0;
+    height:300px;
+}*/
+
+.footerfb {
+    background: url("./themes/base/images/elements.png") no-repeat scroll -757px -65px transparent;
+    padding:0 0 0 15px;
+    color:white;
+}
+.footertweet {
+    background: url("./themes/base/images/elements.png") no-repeat scroll -757px -29px transparent;
+    padding:0 0 0 15px;
+    color:white;
+}
+.footeryt {
+    background: url("./themes/base/images/yticon.png") no-repeat scroll 0 0 transparent;
+    padding:0 0 0 15px;
+    color:white;
+}
+.footergp {
+    background: url("./themes/base/images/gplus.png") no-repeat scroll 0 0 transparent;
+    padding:0 0 0 15px;
+    color:white;
+}
+
+
+
+
+
+
+/*------------Search function--------------*/
+#search {
+    float: right;
+    height: 20px;
+    width: 350px;
+    padding-top: 125px;
+}
+
+/*-------------autocomplete-------------*/
+.ui-autocomplete {
+    max-height: 100px;
+    overflow-y: auto;
+
+    overflow-x: hidden;
+}
+

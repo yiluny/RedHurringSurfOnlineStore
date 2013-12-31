@@ -1,0 +1,100 @@
+﻿@using Webdiyer.WebControls.Mvc;
+@model PagedList<ProjectA.Models.Register>
+@{
+    ViewBag.Title = "CustomersList";
+}
+<div id="dvOrders">
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="span6">
+                 @using (Html.BeginForm("CustomerSearchResult", "AdminCustomer", FormMethod.Get))
+                {
+                    <input class="input-medium search-query" type="text" name="customerSearch"/>
+                    <button class="btn" type="submit">Search</button>
+                }
+            </div>
+            <div class="span6">
+            </div>
+        </div>
+        @if (Model.Count() != 0)
+        {
+            <div class="row-fluid">
+                <div class="span12">
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>User ID</th>
+                                <th>User Name</th>
+                                <th>First Name</th>
+                                <th>Last Name</th>
+                                <th>Email</th>
+                                <th>Details</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                using (Html.BeginForm("DeleteCustomer", "AdminCustomer", new { userId = item.userId }, FormMethod.Post, new { name = "DeleteCustomer" }))
+                                {
+                                    <tr>
+                                        <td>@item.userId</td>
+                                        <td>@item.userName</td>
+                                        <td>@item.firstName</td>
+                                        <td>@item.lastName</td>
+                                        <td>@item.email</td>
+                                        <td>
+                                            <a href="@Url.Action("Detail", "AdminCustomer", new { userId = item.userId })">Details</a>
+                                        </td>
+                                        <td>
+                                            <button id="modal-@item.userId" href="#modal-container-@item.userId" role="button"  class="btn btn-danger btn-block" type="button" data-toggle="modal">Delete</button>
+                                        </td>
+
+                                    </tr>
+                                    <div id="modal-container-@item.userId" class="modal hide fade" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                            <h3 id="myModalLabel">Attention
+                                            </h3>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p>
+                                                Are you sure that you want to delete @item.userName permanently?
+                                            </p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button class="btn" data-dismiss="modal" aria-hidden="true">No</button>
+                                            <input class="btn btn-primary" type="submit" value="Yes" />
+                                        </div>
+                                    </div>
+                            }
+                        }
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        }
+        else
+        {
+            <strong>
+                Sorry, your search for @ViewBag.content did not get any results.
+            </strong>
+        }
+    </div>
+    <div id="itemPage" class="pagination" style="margin-left: 50px; float: left;">
+        @Html.AjaxPager(Model, new PagerOptions()
+       {
+           PageIndexParameterName = "id",
+           ContainerTagName = "ul",
+           PagerItemWrapperFormatString = "<li>{0}</li>",
+           CurrentPagerItemWrapperFormatString = "<li><a>{0}</a></li>",
+           NumericPagerItemWrapperFormatString = "<li>{0}</li>",
+           PrevPageText = "Prev",
+           NextPageText = "Next",
+           ShowDisabledPagerItems = false,
+           AlwaysShowFirstLastPageNumber = true
+       }, new AjaxOptions { UpdateTargetId = "dvOrders" })
+    </div>
+</div>

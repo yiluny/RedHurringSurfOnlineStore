@@ -1,0 +1,45 @@
+﻿#pagination,#pageSelection
+{
+    display:inline-block;
+}
+
+#productShow,#productRows
+{
+
+    width:100%;
+    margin:0;
+}
+
+#productShow ul li 
+{
+    margin-left:10px;
+    margin-top:20px;
+    
+}
+
+
+#productShow ul li a {
+    height:100%; 
+    width:100%; 
+    margin:0;
+}
+#productShow ul li a div {
+    height:75%;
+    width:100%;
+}
+
+#productShow ul li a span {
+    margin:0;
+}
+
+
+.thumbnails {
+    width:100%;
+    background-color:white;
+    margin:0;
+
+}
+
+.container-fluid {
+    margin:0;
+}

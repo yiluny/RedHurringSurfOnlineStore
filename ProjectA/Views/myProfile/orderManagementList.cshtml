@@ -1,0 +1,100 @@
+﻿@model Webdiyer.WebControls.Mvc.PagedList<DateTime>
+@using Webdiyer.WebControls.Mvc;
+
+
+<link href="../../Content/OrderManagement.css" rel="stylesheet" media="screen" type="text/css" />
+
+<script type="text/javascript">
+    function changeArrow(id) {
+
+        var classname = $('#orderDate div #' + id).find('a').find('i').attr("class");
+
+        if (classname == "icon-chevron-down") {
+            $('#orderDate div #' + id).find('a').find('i').removeClass().addClass("icon-chevron-up");
+        }
+        else if (classname == "icon-chevron-up") {
+            $('#orderDate div #' + id).find('a').find('i').removeClass().addClass("icon-chevron-down");
+        }
+    }
+</script>
+
+@if(Model.Count() != 0)
+{
+<div id="dvOrders"  class="mainContent" style="height:300px;">
+    <div class="item">
+        <div class="accordion" id="orderDate">
+            @{ int i = 1;
+               foreach (var orderDate in Model)
+                {
+                    <div class="accordion-group">
+                        <div class="accordion-heading" id="@(i)" onclick="changeArrow(@(i))">
+                            
+                            <a class="accordion-toggle" data-toggle="collapse" data-parent="#orderDate" href="#collapse@(i)" style="color:gray; text-decoration:none; ">
+                                <i class="icon-chevron-down"></i>
+                                <span> Order Made on :</span>
+                                @orderDate.ToString("dd/MM/yyyy")
+                            </a>
+
+                            
+                        </div>
+
+                        <div id="collapse@(i++)" class="accordion-body collapse">
+
+                            <div class="accordion-inner">
+                                @foreach (var order in ViewBag.orders)
+                                {
+                                    if(order.OrderDate.Date == orderDate)
+                                    {
+                                        <ul>
+                                            <li>
+                                                <a href="@Url.Action("OrderDetail", "myProfile", new { orderId = order.OrderId})" style="font-size:small;">
+                                                    @order.OrderDate.ToShortTimeString()
+                                                </a>
+
+                                                @if (Convert.ToString(order.OrderStatus).Equals("Pending"))
+                                                {
+                                                    <span style="float:right;color:red;">@order.OrderStatus</span>
+                                                }
+                                                else if (Convert.ToString(order.OrderStatus).Equals("Shipped"))
+                                                {
+                                                    <span style="float:right;color:green;">@order.OrderStatus</span>
+                                                }
+                                                
+                                            </li>
+                                        </ul>
+                                        
+                                    }
+                                }
+                            </div>
+
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+
+    <div id="itemPage" class="pagination" style="margin-left: 50px; float: left;">
+        @Html.AjaxPager(Model, new PagerOptions()
+       {
+           PageIndexParameterName = "id",
+           ContainerTagName = "ul",
+           PagerItemWrapperFormatString = "<li>{0}</li>",
+           CurrentPagerItemWrapperFormatString = "<li><a>{0}</a></li>",
+           NumericPagerItemWrapperFormatString = "<li>{0}</li>",
+           PrevPageText = "Prev",
+           NextPageText = "Next",
+           ShowDisabledPagerItems = false,
+           AlwaysShowFirstLastPageNumber = true
+       }, new AjaxOptions { UpdateTargetId = "dvOrders" })
+    </div>
+
+
+</div>
+}
+else
+{
+    <div id="dvOrders"  class="mainContent" style="height:300px;">
+        <p>You do not have any orders</p>
+    </div>
+}

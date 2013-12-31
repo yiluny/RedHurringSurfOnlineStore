@@ -1,0 +1,38 @@
+﻿@model Webdiyer.WebControls.Mvc.PagedList<ProjectA.Models.ProductDB>
+@using Webdiyer.WebControls.Mvc;
+@{ ViewBag.Title = "Product Lists";}
+    
+<link href="../../Content/Product.css" rel="stylesheet" media="screen" type="text/css" />
+
+<script type="text/javascript" src="/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#list").change(function () {
+
+            var num = $(this).val();
+            window.location = '/Promotion' + '?itemsPerPage=' + num;
+        });
+
+        $('#promotionProductShow ul li a').each(function (i) {
+            var id = $(this).attr("id");
+
+
+            $('#' + id).find("div").html('<img src="@Url.Content("~/Content/themes/base/images/spinningWheel.gif")" />');
+
+
+
+            $.get("/Home/GetImage", { "id": id },
+                    function (data) {
+                        try {
+                            $('#promotionProductShow ul li #' + id).find("div").html('<img id="' + id + '\_productList' + '\" src="/Home/GetImage?id=' + id + '\" />');
+                        }
+                        catch (Ex) {
+                            alert(Ex.message);
+                        }
+                    });
+        });
+    });
+
+</script>
+
+@{Html.RenderPartial("PromotionProductList", Model); }

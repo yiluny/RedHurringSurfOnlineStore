@@ -1,0 +1,61 @@
+﻿body {
+    background-color:#C0C0C0;
+}
+
+.container-fluid {
+
+    height:auto;
+}
+
+#heading {
+    text-align:center;
+    background-color:#C0C0C0;
+    width:1315px;
+    border-bottom-right-radius:8px;
+    border-bottom-left-radius:8px;
+}
+
+#Logo {
+    height:58px;
+    background-image:url(../themes/base/images/logo_back_end.jpg);
+    background-size:250px 53px;
+    background-repeat:repeat-y;
+}
+
+#MainBody {
+    text-align:center;
+    width:1315px;
+}
+
+#pinedInfo {
+    background-color:#C0C0C0;
+    z-index:1000;
+    border-bottom-left-radius:8px;
+    border-bottom-right-radius:8px;
+}
+
+#AdminInfo {
+    margin-bottom:50px;
+    text-align:left;
+}
+
+#OtherInfo {
+    text-align:left;
+}
+
+#InnerOtherInfo li a{
+    margin-bottom:10px;
+    height:35px;
+}
+
+#contentBody {
+    height:auto;
+    padding:20px;
+    background-image:url(../../Content/themes/base/images/redherring_bg.jpg);
+}
+
+
+/**********/
+.field-validation-error {
+    color:red;
+}

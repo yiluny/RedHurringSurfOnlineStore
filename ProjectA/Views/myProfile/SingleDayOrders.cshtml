@@ -1,0 +1,15 @@
+﻿@model Webdiyer.WebControls.Mvc.PagedList<ProjectA.Models.Order>
+@using Webdiyer.WebControls.Mvc;
+@{ 
+    ViewBag.Title = "SingleBayOreders";
+   Layout = "~/Views/Shared/_Myprofile.cshtml";
+ }
+
+
+
+<script type="text/javascript" src="/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+
+
+<div id="content">
+    @{Html.RenderPartial("SingleDayOrdersList", Model); }
+</div><br />

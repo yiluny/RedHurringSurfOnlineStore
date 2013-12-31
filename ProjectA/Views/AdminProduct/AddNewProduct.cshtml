@@ -1,0 +1,345 @@
+﻿@model ProjectA.ViewModels.AddNewProductViewModel
+
+@{
+    ViewBag.Title = "AddNewProduct";
+    Layout = "~/Views/Shared/AdminHome.cshtml";
+}
+
+
+<!-- Associated dropdown list-->
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $('#MainCategory').change(function () {
+            getSubCategory();
+        });
+        $('#SubCategory').trigger('change');
+
+
+        if ($('#MainCategory').val() == "")
+            $('#SubCategory').prop("disabled", true);
+        else
+            $('#SubCategory').prop("disabled", false);
+    });
+
+    function getSubCategory() {
+        $('#SubCategory').prop("disabled", false);
+
+        var selectedMainCategory = $('#MainCategory').val();
+
+        var SubCategorySelect = $('#SubCategory');
+        SubCategorySelect.empty();
+
+        if (selectedMainCategory != null && selectedMainCategory != '') {
+            $.getJSON("/AdminProduct/change", { mainCategory: selectedMainCategory }, function (subcategories) {
+
+                $.each(subcategories, function (index, subcategory) {
+                    SubCategorySelect.append($('<option/>', {
+                        value: subcategory.Value,
+                        text: subcategory.Text
+                    }));
+                });
+            });
+        }
+        else {
+            $('#SubCategory').prop("disabled", true);
+        }
+    }
+</script>
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        if ($('#ifPromotion').val() == "false")
+            $('#promotedPrice').prop("disabled", true)
+        else
+            $('#promotedPrice').prop("disabled", false)
+
+
+        $('#ifPromotion').change(function () {
+            if ($('#ifPromotion').val() == "true")
+                $('#promotedPrice').prop("disabled", false)
+            else
+                $('#promotedPrice').prop("disabled", true)
+        });
+
+
+        $('#addMore').click(function () {
+            var itemIndex = $('.fileupload').length;
+
+            $('#thumbOthers').append(
+                '<div class="fileupload fileupload-new" data-provides="fileupload" style="display:inline-block; margin-right:5px;" id="items' + itemIndex + '">' +
+
+                    '<button type="button" class="close" aria-hidden="true" id="remove' + itemIndex + '" onclick="removeMe(' + itemIndex + ')">&times;</button>' +
+
+                    '<div class="fileupload-new thumbnail" style="width: 100px; height: 50px;">' +
+                        '<img src="http://www.placehold.it/100x50/EFEFEF/AAAAAA&text=no+image" />' +
+                    '</div>' +
+
+                    '<div class="fileupload-preview fileupload-exists thumbnail" style="max-width: 100px; max-height: 50px; line-height: 20px;"></div>' +
+
+                    '<div>' +
+                        '<span class="btn btn-file btn-success" style="float:left;"><span class="fileupload-new">Select image</span><span class="fileupload-exists">Change</span><input type="file" accept="image/"  id="FileItems' + itemIndex + '" name="imgFiles[' + itemIndex + ']" /></span>' +
+
+                    '</div>' +
+                '</div>'
+            )
+        });
+
+
+
+    });
+
+</script>
+
+<script type="text/javascript">
+    function removeMe(index) {
+
+        $('#thumbOthers').find('#items' + index).remove();
+
+        var newI = parseInt(index) + 1;
+        while ($('#items' + newI).length != 0) {
+            $('#thumbOthers').find('#FileItems' + newI).attr('name', 'imgFiles[' + (newI - 1) + ']').attr('id', 'FileItems' + (newI - 1));
+            $('#thumbOthers').find('#items' + newI).attr('id', 'items' + (newI - 1));
+            $('#thumbOthers').find('#remove' + newI).attr('onclick', 'removeMe(' + (newI - 1) + ')');
+            $('#thumbOthers').find('#remove' + newI).attr('id', 'remove' + (newI - 1));
+            newI = parseInt(newI) + 1;
+        }
+    }
+</script>
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#addMore').prop("disabled", true);
+        $("#imgInp").change(function () {
+            readURL(this);
+        });
+    });
+
+    function readURL(input) {
+        
+        if (input.files && input.files[0]) {
+            $('#addMore').prop("disabled", false);
+        }
+    }
+
+    
+
+</script>
+
+
+@using (Html.BeginForm("AddNewProduct", "AdminProduct", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <div class="container-fluid">
+
+        <div class="row-fluid">
+
+       
+
+            <div class="span12">
+                <div class="row-fluid">
+                    
+                    <div id="Gallery" style="height:auto; width:auto;">
+
+                        <div id="thumbMain">
+
+                            <div class="fileupload fileupload-new" data-provides="fileupload" id="items0">
+                                <div class="fileupload-new thumbnail" style="width: 300px; height: 150px;">
+                                    <img src="http://www.placehold.it/300x150/EFEFEF/AAAAAA&text=no+image" />
+                                </div>
+
+                                <div class="fileupload-preview fileupload-exists thumbnail" style="max-width: 200px; max-height: 150px; line-height: 20px;"></div>
+
+                                <div>
+                                    <span class="btn btn-file btn-success"><span class="fileupload-new">Select image</span><span class="fileupload-exists">Change</span><input type="file" accept="image/" name="imgFiles[0]" value="largeImage" id="imgInp"/></span>
+                                    <a href="#" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>
+                                </div>
+                            </div>
+                            <button class="btn btn-medium" id="addMore" type="button">Add More</button>
+                            
+                        </div>
+
+                        <div id="thumbOthers" style="width:auto; max-width:750px; margin-top:20px;">
+                            
+                        </div>
+                        
+
+
+                    </div>
+
+                </div>
+            </div>
+            @if (!String.IsNullOrWhiteSpace(Convert.ToString(TempData["Message"])))
+            {
+                if (Convert.ToBoolean(TempData["AddResult"]))
+                {
+                    <div class="span6 alert alert-success">
+
+                           <button type="button" class="close" data-dismiss="alert">&times;</button>
+                            <span>
+                                <img src="@Url.Content("~/Content/themes/base/images/tick.png")" />
+                                @TempData["Message"]
+                            </span>
+                        
+                
+                    </div>
+                }
+                else
+                {   
+                    <div class="span6 alert alert-danger">
+
+                           <button type="button" class="close" data-dismiss="alert">&times;</button>
+                            <span>
+                                <img src="@Url.Content("~/Content/themes/base/images/warning.png")" />
+                                @TempData["Message"]
+                            </span>
+                        
+                
+                    </div>
+                
+                }
+            }
+        </div>
+
+
+        <div class="row-fluid" style="margin-top: 30px; padding:30px 0 20px 30px; height:auto;">
+
+            <div class="span12" style="text-align:left;">
+                <div class="row-fluid">
+
+                    <div class="span6">
+                        <div class="control-group">
+                            <label class="control-label" for="ProductsName">Products Name</label>
+                            <div class="controls">
+
+                                @Html.EditorFor(model => model.productName)
+                            </div>
+
+                            <div class="controls">
+                                @Html.ValidationMessageFor(model => model.productName)
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            <label class="control-label" for="UnitPrice">Unit Price</label>
+                            <div class="controls">
+
+                                @Html.EditorFor(model => model.productPrice)
+                                
+                            </div>
+
+                            <div class="controls">
+                                @Html.ValidationMessageFor(model => model.productPrice)
+                                
+                            </div>
+                        </div>
+
+
+                        <div class="control-group">
+                            <label class="control-label" for="StockNumber">In Stock</label>
+                            <div class="controls">
+                                @Html.EditorFor(model => model.stockNumber)
+                                
+                            </div>
+
+                            <div class="controls">
+                                @Html.ValidationMessageFor(model => model.stockNumber)
+                                
+                            </div>
+                        </div>
+
+                        <div class="productDescription">
+                            <label>Product Description</label>
+
+                            <div class="controls">
+                                @Html.TextAreaFor(model => model.productDescription, new { @style = "width:490px;" })
+                            </div>
+
+                            <div class="controls">
+                                @Html.ValidationMessageFor(model => model.productDescription)
+                            </div>
+                            
+                        </div>
+
+                    </div>
+
+                    <div class="span6">
+                        <div class="ifNewArrival">
+                            <label>If NewArrival</label>
+                            @Html.DropDownList("ifNewArrival", (SelectList)ViewBag.ifNewArrival)
+                        </div>
+
+                        <div class="ifTopSales">
+                            <label>If TopSales</label>
+                            @Html.DropDownList("ifTopSales", (SelectList)ViewBag.ifTopSales)
+                        </div>
+
+                        <div class="Promotion" style="display:inline-block;">
+                            <label>If Promoted</label>
+                            @Html.DropDownList("ifPromotion", (SelectList)ViewBag.ifPromotion)
+                        </div>
+
+                        <div style="display:inline-block;">
+                            @Html.TextBox("promotedPrice", "", new { id = "promotedPrice", style = "width:80px;" })
+                        </div>
+
+                        <div>
+                            @Html.ValidationMessage("promotedPrice")
+                        </div>
+
+                        <div class="MainCategory">
+                            <label>MainCategory</label>
+                            <div class="controls">
+                                @Html.DropDownListFor(model => model.MainCategory, (SelectList)(ViewBag.mainCategory), String.Empty)
+                            </div>
+
+                            <div class="controls">
+                                @Html.ValidationMessageFor(model => model.MainCategory)
+                            </div>
+
+                        </div>
+
+
+                        <div class="SubCategory">
+                            <label>SubCategory</label>
+                            <div class="controls">
+                                @Html.DropDownListFor(model => model.SubCategory, (SelectList)(ViewBag.subCategory), String.Empty)
+                            </div>
+
+                            <div>
+                                @Html.ValidationMessageFor(model => model.SubCategory)
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="row-fluid" id="buttonGroup" style="margin-top:30px;">
+                    <div class="span3">
+                    </div>
+                    <div class="span3">
+                        <button class="btn btn-block btn-success" type="submit">Apply</button>
+                    </div>
+                    <div class="span3">
+                        <button class="btn btn-block btn-danger" type="button">CanCel</button>
+                    </div>
+                    <div class="span3">
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+}
+
+
+
+<script type="text/javascript" src="http://js.nicedit.com/nicEdit-latest.js"></script>\
+<script type="text/javascript">
+    //<![CDATA[
+    bkLib.onDomLoaded(function () { nicEditors.allTextAreas() });
+    //]]>
+</script>

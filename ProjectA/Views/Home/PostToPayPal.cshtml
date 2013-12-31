@@ -1,0 +1,50 @@
+﻿@model ProjectA.Models.Paypal
+@{
+    Layout = null;
+}
+<html>
+<head>
+    <title>Index</title>
+    <script src="@Url.Content("~/Scripts/jquery-1.7.1.js")" type="text/javascript"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#frm').submit();
+        });
+</script>
+</head>
+<body>
+
+
+
+<form id="frm" method="post" action="@ViewData["actionURl"]">
+  
+   
+
+    <input type="hidden" name="upload" value="1">
+    @Html.HiddenFor(model => model.cmd)
+    @Html.HiddenFor(model => model.business)
+    @Html.HiddenFor(model => model.no_shipping)
+    @Html.HiddenFor(model => model.@return)
+    @Html.HiddenFor(model => model.cancel_return)
+    @Html.HiddenFor(model => model.notify_url)
+    @Html.HiddenFor(model => model.currency_code)
+    @Html.HiddenFor(model=>model.shipping_1)
+
+    @for (int i = 0; i < Model.orders.Count(); i++)
+    {
+        <input type="hidden" name="item_name_@(i+1)" value="@(Model.orders[i].item_name)" readonly />
+        <input type="hidden" name="amount_@(i+1)" value="@(Model.orders[i].unitPrice)" readonly />
+        <input type="hidden" name="quantity_@(i+1)" value="@(Model.orders[i].quantity)" readonly />
+         <input type="hidden" name="tax_@(i+1)" value="@(Model.orders[i].tax)" readonly />
+    }
+
+</form>
+   
+<p style="text-align: center">
+    <h4>
+        Redirecting to Paypal...
+    </h4>
+</p>
+</body>
+</html>
+    

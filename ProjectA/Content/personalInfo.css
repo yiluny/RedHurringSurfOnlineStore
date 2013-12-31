@@ -1,0 +1,87 @@
+﻿#content {
+    z-index:1000;
+    margin-left:0px;
+}
+
+.editor-label, .editor-label label {
+    font-weight:bold;
+}
+/*#leftContent{
+    float:left;
+    text-align:center;
+    font-size:large;
+    line-height:40px;
+    height:400px;
+    width:300px;
+    border:ridge;
+    padding-top:50px;
+   
+    display:inline-block;
+}
+
+#rightContent {
+    display:inline-block;
+    width:300px;
+}*/
+
+
+.mainContent {
+    border-radius:3px;
+    /*height:auto !important;*/
+    width:600px;
+    box-shadow:4px 4px 12px 4px rgba(20%,20%,40%,0.5);
+    border:1px ridge #254117;
+    background-color:white;
+    padding:20px;
+    margin-bottom:30px;
+}
+
+
+em {
+    color:red;
+}
+
+.field-validation-error {
+    color:red;
+}
+
+#personalInfoSelection {
+    background-color:#c40202;
+    width:220px;
+    height:300px;
+    z-index:-100;
+    float:left;
+    border-top-left-radius:5px;
+    border-bottom-left-radius:5px;
+    margin-top:30px;
+    font-size:17px;
+}
+
+
+#personalInfoSelection li {
+    height:45px;
+}
+
+#personalInfoSelection a {
+    font-size:19px; 
+    color:white;
+    height:45px;
+}
+
+#personalInfoSelection a:hover {
+    color:#c40202;
+    height:45px;
+}
+
+.active {
+    box-shadow:4px 4px 12px 4px rgba(20%,20%,40%,0.5);
+    background-color:white;
+    color:#c40202;
+    height:45px;
+}
+
+.active a{
+    color:#c40202;
+    height:45px;
+}
+

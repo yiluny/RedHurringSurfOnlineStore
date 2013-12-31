@@ -1,0 +1,40 @@
+﻿/*--------------------------------User Registration----------------------------------------*/
+#UserSignUp {
+    border-radius:3px;
+    height:auto !important;
+    width:700px;
+    box-shadow:grey 3px 3px 3px;
+    border:1px ridge #254117;
+    margin-left:50px;
+    background-color:white;
+    padding:20px;
+}
+
+em {
+    color:red;
+}
+
+.field-validation-error {
+    color:red;
+}
+
+#recaptcha {
+    clear:both;
+    border:1px ridge;
+    text-align:center;
+}
+
+
+#submit {
+    clear:both; 
+    text-align:center;
+}
+
+#recaptcha_image {
+    padding-left:150px;
+}
+
+.toggler,#effect {
+    width: 400px;
+    height: 100px;
+}

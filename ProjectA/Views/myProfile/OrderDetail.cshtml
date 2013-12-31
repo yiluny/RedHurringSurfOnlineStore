@@ -1,0 +1,157 @@
+﻿@model Webdiyer.WebControls.Mvc.PagedList<ProjectA.Models.OrderDetail>
+@using Webdiyer.WebControls.Mvc;
+
+@{
+    ViewBag.Title = "OrderDetail";
+    Layout = "~/Views/Shared/_Myprofile.cshtml";    
+}
+
+@helper Truncate(string input, int length)
+{
+    if (input.Length <= length)
+    {
+    @input
+    }
+    else
+    {
+    @input.Substring(0, length)<text>...</text>
+    }
+}
+
+<link href="../../Content/OrderManagement.css" rel="stylesheet" media="screen" type="text/css" />
+<script type="text/javascript" src="../../Scripts/jquery-1.7.1.js"></script>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        $('#reason').css("display","none");
+    });
+    function getReason(id)
+    {
+        $.post("/myProfile/getOrderReason", { "orderId": id },
+            function (data) {
+                $('#reasonContent').html(data);
+            });
+
+        $('#reason').toggle(500);
+        
+    }
+</script>
+
+
+
+<div class="container-fluid mainContent" id="dvOrderDetails">
+	<div class="row-fluid">
+		<div class="span12">
+
+            <div class="row-fluid">
+				<div class="span12">
+                    @if (!String.IsNullOrWhiteSpace(Convert.ToString(ViewBag.OrderStatus)))
+                    {
+                        if (Convert.ToString(ViewBag.OrderStatus).Equals("Pending"))
+                        {
+                             <span>Status:
+                                  <span style="color:red">@ViewBag.OrderStatus</span>
+                                  <a class="btn-link" id="ToShowReason" onclick="getReason('@(ViewBag.OrderId)')">Reasons?</a>
+                             </span>
+                        }
+                        else if (Convert.ToString(ViewBag.OrderStatus).Equals("Shipped")) 
+                        {
+                             <label>Status</label>
+                             <span style="color:green">@ViewBag.OrderStatus</span>
+                        }
+                    }
+                    
+                    
+
+				</div>
+			</div>
+
+			<table class="table table-hover table-bordered">
+				<thead>
+					<tr>
+						<th>Product Image</th>
+						<th>Product Name</th>
+                        <th>Product Size</th>
+						<th>Quantity</th>
+						<th>Unit Price</th>
+                        <th>Sub Total</th>
+					</tr>
+				</thead>
+				<tbody>
+					@foreach (var orderDetail in Model)
+                    {
+                        <tr>
+                            <td>
+                                <img src="@Url.Action("GetImage", "Home", new { id = orderDetail.ProductId })" style="width:100px; height:100px;"/>
+                            </td>
+
+                            <td>
+                                @orderDetail.Product.productName
+                            </td>
+                            <td>
+                                @orderDetail.productSize
+                            </td>
+                            <td>
+                                @orderDetail.Quantity
+                            </td>
+                            <td>
+                                @orderDetail.UnitPrice
+                            </td>
+                            <td>
+                                @(orderDetail.Quantity * orderDetail.UnitPrice)
+                            </td>
+                        </tr>
+                    }
+
+                    <tr>
+                        
+                        <td colspan="6" style="text-align:right;">Total Price: @ViewBag.TotalPrice</td>
+                    </tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+
+
+
+
+    <div class="row-fluid">
+		<div class="span12 toggler" id="reason" >
+            <span style="color:red;">Reasons :</span><br />
+            <span id="reasonContent" class="ui-widget-content ui-corner-all span12" style="padding:15px; margin:0;">
+
+            </span>
+		</div>
+	</div>
+
+
+    <div id="itemPage" class="pagination" style="margin-left: 50px;">
+        @Html.AjaxPager(Model, new PagerOptions()
+        {
+            PageIndexParameterName = "id",
+            ContainerTagName = "ul",
+            PagerItemWrapperFormatString = "<li>{0}</li>",
+            CurrentPagerItemWrapperFormatString = "<li><a>{0}</a></li>",
+            NumericPagerItemWrapperFormatString = "<li>{0}</li>",
+            PrevPageText = "Prev",
+            NextPageText = "Next",
+            ShowDisabledPagerItems = false,
+            AlwaysShowFirstLastPageNumber = true
+        }, new AjaxOptions { UpdateTargetId = "dvOrderDetails" })
+    </div>
+
+
+    <p id="go_back_detail" style="text-align:left;">
+        @if (Session["LoginUser"] != null)
+        {
+            <a href="@Url.Action("orderManagement", "myProfile", new { userName = Session["LoginUser"] })" class="btn btn-large btn-primary">Go back</a>
+        }
+        else if (HttpContext.Current.Request.Cookies["User"] != null)
+        {
+            string userName = HttpContext.Current.Request.Cookies["User"].Values.Get(0);
+            <a href="@Url.Action("orderManagement", "myProfile", new { userName = userName })" class="btn btn-large btn-primary" style="margin-left:250px">Go back</a>
+        }
+    </p>
+
+</div>

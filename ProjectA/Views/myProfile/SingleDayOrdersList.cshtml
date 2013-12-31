@@ -1,0 +1,27 @@
+﻿@using Webdiyer.WebControls.Mvc;
+@model PagedList<ProjectA.Models.Order>
+<link href="../../Content/OrderManagement.css" rel="stylesheet" media="screen" type="text/css" />
+
+<div id="dvOrders">
+    <div class="item">
+    </div>
+
+    <p id="go_back"><a href="@Url.Action("orderManagement", "myProfile", new {userName = Session["LoginUser"]})">Go back</a></p>
+
+    <div id="itemPage" class="pagination" style="margin-left: 50px; float: left;">
+        @Html.AjaxPager(Model, new PagerOptions()
+       {
+           PageIndexParameterName = "id",
+           ContainerTagName = "ul",
+           PagerItemWrapperFormatString = "<li>{0}</li>",
+           CurrentPagerItemWrapperFormatString = "<li><a>{0}</a></li>",
+           NumericPagerItemWrapperFormatString = "<li>{0}</li>",
+           PrevPageText = "Prev",
+           NextPageText = "Next",
+           ShowDisabledPagerItems = false,
+           AlwaysShowFirstLastPageNumber = true
+       }, new AjaxOptions { UpdateTargetId = "dvOrders" })
+    </div>
+
+
+</div>

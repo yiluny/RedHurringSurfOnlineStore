@@ -1,0 +1,344 @@
+﻿@model IEnumerable<ProjectA.Models.ProductDB>
+@{
+    ViewBag.Title = "Home Page";
+    
+}
+
+@helper Truncate(string input, int length)
+{
+    if (input.Length <= length)
+    {
+        @input
+    }
+    else
+    {
+        @input.Substring(0, length)<text>...</text>
+    }
+}
+<link href="Content/scroll_homepage.css" rel="stylesheet" media="screen" type="text/css" />
+<script type="text/javascript" src="../../Scripts/jquery.jcarousel.min.js"></script>
+@*<script src="//code.jquery.com/jquery-latest.min.js"></script>*@
+@*<script src="//unslider.com/unslider.js"></script>*@
+
+
+<script type="text/javascript">
+    $(function () {
+        var sWidth = $("#focus").width(); //获取焦点图的宽度（显示面积）
+        var len = $("#focus ul li").length; //获取焦点图个数
+        var index = 0;
+        var picTimer;
+
+        //以下代码添加数字按钮和按钮后的半透明条，还有上一页、下一页两个按钮
+        var btn = "<div class='btnBg'></div><div class='btn'>";
+        for (var i = 0; i < len; i++) {
+            btn += "<span></span>";
+        }
+        btn += "</div><div class='preNext pre'></div><div class='preNext next'></div>";
+        $("#focus").append(btn);
+        $("#focus .btnBg").css("opacity", 0.5);
+
+        //为小按钮添加鼠标滑入事件，以显示相应的内容
+        $("#focus .btn span").css("opacity", 0.4).mouseover(function () {
+            index = $("#focus .btn span").index(this);
+            showPics(index);
+        }).eq(0).trigger("mouseover");
+
+        //上一页、下一页按钮透明度处理
+        $("#focus .preNext").css("opacity", 0.2).hover(function () {
+            $(this).stop(true, false).animate({ "opacity": "0.5" }, 300);
+        }, function () {
+            $(this).stop(true, false).animate({ "opacity": "0.2" }, 300);
+        });
+
+        //上一页按钮
+        $("#focus .pre").click(function () {
+            index -= 1;
+            if (index == -1) { index = len - 1; }
+            showPics(index);
+        });
+
+        //下一页按钮
+        $("#focus .next").click(function () {
+            index += 1;
+            if (index == len) { index = 0; }
+            showPics(index);
+        });
+
+        //本例为左右滚动，即所有li元素都是在同一排向左浮动，所以这里需要计算出外围ul元素的宽度
+        $("#focus ul").css("width", sWidth * (len));
+
+        //鼠标滑上焦点图时停止自动播放，滑出时开始自动播放
+        $("#focus").hover(function () {
+            clearInterval(picTimer);
+        }, function () {
+            picTimer = setInterval(function () {
+                showPics(index);
+                index++;
+                if (index == len) { index = 0; }
+            }, 4000); //此4000代表自动播放的间隔，单位：毫秒
+        }).trigger("mouseleave");
+
+        //显示图片函数，根据接收的index值显示相应的内容
+        function showPics(index) { //普通切换
+            var nowLeft = -index * sWidth; //根据index值计算ul元素的left值
+            $("#focus ul").stop(true, false).animate({ "left": nowLeft }, 300); //通过animate()调整ul元素滚动到计算出的position
+            //$("#focus .btn span").removeClass("on").eq(index).addClass("on"); //为当前的按钮切换到选中的效果
+            $("#focus .btn span").stop(true, false).animate({ "opacity": "0.4" }, 300).eq(index).stop(true, false).animate({ "opacity": "1" }, 300); //为当前的按钮切换到选中的效果
+        }
+
+
+        $('#mycarousel').jcarousel({
+            wrap: 'circular'
+        });
+
+        $('#mycarousel2').jcarousel({
+            wrap: 'circular'
+        });
+
+        $('.view-back input').click(function () {
+
+            $('#self_voucher').val($(this).val());
+        });
+
+    });
+</script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.newarrival #wrap #mycarousel li a').each(function (i) {
+            var id = $(this).attr("id");
+
+            $('#' + id).find('div').html('<img src="@Url.Content("~/Content/themes/base/images/spinningWheel.gif")" style="height:150px;"/>');
+
+            var para = String(id).split("_");
+
+
+            $.get("/Home/GetImage", { "id": para[0] },
+                    function (data) {
+                        try {
+                            var altName = $('#' + id).attr('data');
+                            $('#' + id).find('div').html('<div style="height:150px; width:150px;"><img id="' + para[0] + '\_productList1' + '\" src="/Home/GetImage?id=' + para[0] + '\" title="' + altName + '" alt="' + altName + '" /></span>');
+                            var img = new Image();
+                            img.src = $('#' + para[0] + '_productList1').attr('src');
+                            img.onload = function () {
+                                var H = this.height,
+                                    W = this.width;
+
+                                if (150 / H < 150 / W) {
+
+                                    W = W * 150 / H;
+                                    H = 150;
+                                }
+                                else if (150 / W > 150 / H) {
+
+                                    H = H * 150 / W;
+                                    W = 150;
+                                }
+                                $('#' + para[0] + '_productList1').css('width', W + "px", 'height', H + 'px');
+                            }
+                        }
+                        catch (Ex) {
+                            alert(Ex.message);
+                        }
+                    });
+        });
+
+        $("#voucherSubmit").click(function () {
+            var quantity = parseInt($("#quantity").val());
+            var productId = parseInt($("#id").val());
+            var size = "";
+            $.post("/../ShoppingCart/AddToCart", { "id": productId, "quantity": quantity, "size": size });
+            var currenCart = $("#cart-status").html().replace(/[^\d.]/g, '');
+            var cartNumber = parseInt(currenCart, 10);
+            var newCartNumber = cartNumber + quantity;
+            $("#cart-status").html("cart(" + newCartNumber + ")");
+
+            $("#cartSum").html('<img src="@Url.Content("~/Content/themes/base/images/spinningWheel.gif")" style="width:100px; height:100px; margin:auto; padding-top:100px;"/>');
+            $("#cartSum").load('@Url.Action("smallCart", "ShoppingCart")');
+            $("#cartSum").slideDown(300);
+            setTimeout(function () {
+                if ($('#cartSum:hover').length == 0)
+                    $("#cartSum").slideUp(300);
+            }, 5000);
+        });
+    });
+</script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.TopSales #wrap2 #mycarousel2 li a').each(function (i) {
+            var id = $(this).attr("id");
+
+            $('#' + id).find('div').html('<img src="@Url.Content("~/Content/themes/base/images/spinningWheel.gif")" style="height:150px;"  />');
+
+            var para = String(id).split("_");
+
+            $.get("/Home/GetImage", { "id": para[0] },
+                    function (data) {
+                        try {
+                            var altName = $('#' + id).attr('data');
+                            $('#' + id).find('div').html('<div style="height:150px; width:150px;"><img id="' + para[0] + '\_productList' + '\" src="/Home/GetImage?id=' + para[0] + '\" title="' + altName + '" alt="' + altName + '"/></div>');
+                            var img = new Image();
+                            img.src = $('#' + para[0] + '_productList').attr('src');
+                            img.onload = function () {
+                                var H = this.height,
+                                    W = this.width;
+
+                                if (150 / H < 150 / W) {
+
+                                    W = W * 150 / H;
+                                    H = 150;
+                                }
+                                else if (150 / W > 150 / H) {
+
+                                    H = H * 150 / W;
+                                    W = 150;
+                                }
+                                $('#' + para[0] + '_productList').css('width', W + "px", 'height', H + 'px');
+                            }
+                        }
+                        catch (Ex) {
+                            alert(Ex.message);
+                        }
+                    });
+        });
+    });
+</script>
+	
+<div class="first_container">
+    <div id="grid" class="left_container">
+        <div class="info_1">
+
+            <div class="container-fluid">
+                <div class="row-fluid">
+                    <div class="span12" id="info_button">
+                        <a class="btn btn-info" href="@Url.Action("signIn", "signIn")">Go!</a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="view-back">
+            <form>
+                <select style="width: 150px; margin-left: 20px;" name="id" id="id">
+                    @*<option value="Default">Please select</option>*@
+                    <option value="140">$10</option>
+                    <option value="141">$20</option>
+                    <option value="142">$50</option>
+                    <option value="143">$100</option>
+                </select>
+                <select style="width: 150px; margin-left: 20px;" name="quantity" id="quantity">
+                    @*<option value="Default">Please select</option>*@
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                </select>
+                <span style="padding-bottom: 15px;width:30px;">
+                    <input type="button" class="btn btn-danger" id="voucherSubmit" value="Add to cart" style="width:100px;"/>
+                </span>
+            </form>
+
+        </div>
+
+        <div class="google">
+            <a href="@Url.Action("Location", "Information")">
+                <img alt="find_us" src="../../Content/themes/base/images/google.jpg" />
+            </a>
+        </div>
+
+
+        <div class="promotion">
+            <a href="@Url.Action("Index", "Promotion")">
+                <img alt="Promotion Puroducts" src="../../Content/themes/base/images/promotion.jpg" />
+            </a>
+        </div>
+
+    </div>
+
+
+    <div class="wrapper">
+
+        <div id="focus">
+            <ul>
+                <li><a href="#" target="_blank">
+                    <img src="../../Content/themes/base/images/01.jpg" alt="QQ商城焦点图效果下载" /></a></li>
+                <li><a href="#" target="_blank">
+                    <img src="../../Content/themes/base/images/02.jpg" alt="QQ商城焦点图效果教程" /></a></li>
+                <li><a href="#" target="_blank">
+                    <img src="../../Content/themes/base/images/03.jpg" alt="jquery商城焦点图效果" /></a></li>
+                <li><a href="#" target="_blank">
+                    <img src="../../Content/themes/base/images/04.jpg" alt="jquery商城焦点图代码" /></a></li>
+                <li><a href="#" target="_blank">
+                    <img src="../../Content/themes/base/images/05.jpg" alt="jquery商城焦点图源码" /></a></li>
+            </ul>
+        </div>
+        <!--focus end-->
+
+    </div>
+    <!-- wrapper end -->
+
+    <!-- Introduction-->
+    <div class="home_introduction">
+        <p style="font: 16px bold">Red Herring Surf Shop. We surf, we skate, we share what we know.</p>
+        <br />
+        <p>
+            We want you out there charging. Making sure you have the right equipment is crucial so we've chosen a range of boards and equipment from the world's leading makers that will help lift your game no matter where it's currently at.
+Maybe more important than the gear we sell is the advice of our staff. Our staff are sponsored surfers and qualified surf instructors.
+        </p>
+    </div>
+
+    <!-----youtube----->
+    <iframe width="485" height="295" style="margin-left: 5px; margin-top: 10px; box-shadow: black 2px 2px 2px;" src="http://www.youtube.com/embed/_IhfbBwoWbA" frameborder="0" allowfullscreen></iframe>
+
+    <!-- New Arrival-->
+    <div class="newarrival">
+        <div id="wrap">
+            <p>New Arrivals</p>
+            <ul id="mycarousel" class="jcarousel-skin-tango row-fluid">
+                @{  int i = 0;
+                    foreach (var product in Model)
+                    {
+                        if (product.ifNewArrival == true)
+                        {
+                    <li class="row-fluid" style="">
+
+                        <a href="@Url.Action("Details", "Product", new { id = product.productId })" id ="@product.productId.ToString()_newarrival" data="@product.productName" style="height:170px;" class="thumbnail row-fluid">
+                            <div>
+
+                            </div>
+
+                            <span title="@product.productName" class="row-fluid">@Truncate(product.productName,20)</span>
+                        </a>
+                        
+                    </li>
+                        }
+                    }
+                }
+            </ul>
+        </div>
+    </div>
+
+    <div class="TopSales">
+        <div id="wrap2">
+            <p>Top sales</p>
+            <ul id="mycarousel2" class="jcarousel-skin-tango">
+                @foreach (var product in Model)
+                {
+                    if (product.ifTopSales == true)
+                    {
+                    <li class="row-fluid">
+                        <a href="@Url.Action("Details", "Product", new { id = product.productId })" id ="@product.productId.ToString()_TopSales" data="@product.productName" class="thumbnail row-fluid" >
+                            <div>
+
+                            </div>
+                            <span title="@product.productName" class="row-fluid ">@Truncate(product.productName,20)</span>
+                        </a>
+                    </li>
+                    }
+                }
+            </ul>
+        </div>
+    </div>
+
+</div>

@@ -1,0 +1,348 @@
+﻿@model ProjectA.ViewModels.CombineViewModel
+@{
+    ViewBag.Title = "Shopping Cart";
+}
+
+@using Recaptcha
+<link href="../../Content/ShoppingCart.css" rel="stylesheet" media="screen" type="text/css" />
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        $('.alert').css("display", "none");
+
+    });
+
+
+    $(document).ready(function () {
+
+
+
+        $('#shopCartSignIn').click(function () {
+
+            var Username = $('#Username').val();
+            var password = $('#Password').val();
+            if ($('#rememberMe').is(":checked")) {
+                var rem = true;
+            }
+            else
+                rem = false;
+
+
+            $.get("/SignIn/checkOnshopCart", { "Username": Username, "password": password, "rememberMe": rem },
+                function (data) {
+                    // Successful requests get here
+                    // Update the page elements                   
+                    if (data != true) {
+
+                        $('#error').html(data);
+                        $('.alert').css("display", "block");
+                    }
+                    else {
+                        window.location.reload();
+                    }
+
+                });
+
+        });
+
+
+
+    });
+
+</script>
+
+<script type="text/javascript">
+    $(function () {
+        // Document.ready -> link up remove event handler
+        $(".RemoveOne").click(function () {
+            // Get the id from the link
+            var recordToDeleteOne = $(this).attr("data-id");
+            if (recordToDeleteOne != '') {
+                // Perform the ajax post
+                $.post("/ShoppingCart/RemoveOne", { "id": recordToDeleteOne },
+                    function (data) {
+                        // Successful requests get here
+                        // Update the page elements
+                        if (data.ItemCount == 0) {
+                            $('#row-' + data.DeleteId).fadeOut('slow');
+                            $('#update-message').text(data.Message);
+                        } else {
+                            $('#item-ProductSubTotal-' + data.DeleteId).text(parseFloat(data.ProductsubTotal).toFixed(2));
+                            $('#item-count-' + data.DeleteId).val(data.ItemCount);
+                        }
+                        $('#cart-status').text('Cart (' + data.CartCount + ')');
+                    });
+            }
+        });
+
+        // Document.ready -> link up add event handler
+        $(".AddOne").click(function () {
+            // Get the id from the link
+            var recordToAddOne = $(this).attr("data-id");
+            if (recordToAddOne != '') {
+                // Perform the ajax post
+                $.post("/ShoppingCart/AddOne", { "id": recordToAddOne },
+                    function (data) {
+                        // Successful requests get here
+                        // Update the page elements                   
+                        $('#item-ProductSubTotal-' + data.DeleteId).text(parseFloat(data.ProductsubTotal).toFixed(2));
+                        $('#item-count-' + data.DeleteId).val(data.ItemCount);
+                        $('#cart-status').text('Cart (' + data.CartCount + ')');
+                    });
+            }
+        });
+
+        // Document.ready -> link up deleteAll event handler
+        $(".DeleteAll").click(function () {
+            // Get the id from the link
+            var recordToDelete = $(this).attr("data-id");
+            if (recordToDelete != '') {
+                // Perform the ajax post
+                $.post("/ShoppingCart/DeleteOne", { "id": recordToDelete },
+                    function (data) {
+                        // Successful requests get here
+                        // Update the page elements
+                        if (data.ItemCount == 0) {
+                            $('#row-' + data.DeleteId).fadeOut('slow');
+                        } else {
+                            $('#item-count-' + data.DeleteId).val(data.ItemCount);
+                        }
+                        $('#update-message').text(data.Message);
+                        $('#cart-status').text('Cart (' + data.CartCount + ')');
+                    });
+            }
+        });
+
+        $('.shipping_fee_selcet').click(function () {
+            //return the selceted shipping fee
+            $('#shipping_handing').html($(this).val());
+
+            $('#total_excl_tax').html((parseFloat($(this).val()) + parseFloat($('#cart-total').html())).toFixed(2));
+            $('#total_after_tax').html((parseFloat($(this).val()) + parseFloat($('#cart-total').html()) + parseFloat($('#total_tax').html())).toFixed(2));
+        });
+
+        $('#total_excl_tax').html((parseFloat($('#standard_shipping').val()) + parseFloat($('#cart-total').html())).toFixed(2));
+        $('#total_after_tax').html((parseFloat($('#standard_shipping').val()) + parseFloat($('#cart-total').html()) + parseFloat($('#total_tax').html())).toFixed(2));
+
+    });
+</script>
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        // Dialog Simple
+        $('#dialog_simple').dialog({
+            autoOpen: false,
+            width: 700,
+            buttons: {
+                //"Ok": function () {
+                //    $(this).dialog("close");
+                //},
+                "Cancel": function () {
+                    $(this).dialog("close");
+                }
+            }
+        });
+    });
+
+    function checkLogin() {
+        $.post("/SignIn/Check", { "id": "" },
+            function (data) {
+                // Successful requests get here
+                // Update the page elements
+                if (data) {
+                    $('#dialog_simple').dialog('open');
+                    
+                }
+            });
+    }
+
+    function checkOut() {
+        var listaScriptUrl = '@Url.Action("Index", "ShoppingCart", new {shippingFee = "shippingFeeHere", CartId = Session["CartId"]})';
+        var shippingFee = $('.shipping_fee_selcet').val();
+        listaScriptUrl = listaScriptUrl.replace("shippingFeeHere", shippingFee);
+        listaScriptUrl = listaScriptUrl.replace("&amp;", "&");
+        document.location.href = listaScriptUrl;
+    }
+</script>
+<div id="Lista-Script"></div>
+
+
+
+
+
+
+
+
+
+@if (Model.shoppingCart.CartItems.Count() != 0 || Request.QueryString["shopping"] == "True")
+{
+    <div id="dialog_simple" title="Dialog Simple Title" style="display: none;">
+        @{Html.RenderPartial("~/Views/SignIn/test.cshtml", Model.signIn);}
+
+    </div>
+    
+    <!--<p class="button_checkout">-->
+    <a class = "btn btn-success btn-large ContinueShopping" href="@Url.Action("Index", "Home")">Continue shopping</a>
+
+    <a class = "btn btn-danger btn-large empty" href="@Url.Action("EmptyAllCart", "ShoppingCart")"><i class="icon-trash icon-large"></i>Empty</a>
+
+    <div id="update-message" style="margin-left: 250px">
+    </div>
+
+    <div class="shoppingCart_table">
+
+        @using (Html.BeginForm("Index", "ShoppingCart"))
+        {
+            <table class="shoppingCart_item">
+                <tr id="shopping_cart_title">
+                    <td style="width: 120px;"></td>
+
+                    <td style="width: 300px;">PRODUCT NAME
+                    </td>
+                     <td style="width: 120px;">PRODUCT SIZE
+                    </td>
+                    <td style="width: 120px;">UNIT PRICE
+                    </td>
+                    <td class="removeItem" style="width: 50px;"></td>
+                    <td class="cartCount" style="width: 50px;">QTY
+                    </td>
+                    <td class="addItem" style="width: 50px;"></td>
+                    <td>SUBTOTAL
+                    </td>
+                    <td></td>
+                </tr>
+                @foreach (var item in Model.shoppingCart.CartItems)
+                {
+
+                    <tr id="row-@item.RecordId" >
+
+                        <td id="product_img" style="width: 120px;">
+                            <img id="@item.Product.productId.ToString()_shoppingCart" alt="@item.Product.productName" src="@Url.Action("GetImage", "Home", new { id = item.Product.productId })"  style="height:100px; width:120px; border:none;" />
+                        </td>
+
+                        <td id="product_name" style="font-size: 14px; width: 300px;">
+                            @Html.ActionLink(item.Product.productName, "Details", "Store", new { id = item.ProductId }, null)
+                        </td>
+                        @if (item.ProductSize != null)
+                        {
+                            <td id="product_size" style="width: 120px;">
+                                <span style="font-size: 14px;">@item.ProductSize</span>
+                            </td>
+                        }
+                        else
+                        {<td></td>}
+                        <td id="product_price" style="width: 120px;">
+                            <span style="font-size: 14px;">$@item.Product.productPrice</span>
+                        </td>
+
+                        <td class="removeItem"><a href="#" class="RemoveOne" data-id="@item.RecordId" id="remove" style="text-decoration:none">
+                            <i class="icon-minus"></i></a></td>
+
+                        <td class="cartCount" style="font-size: 14px;">
+                            <input value="@item.Count" id="item-count-@item.RecordId" name="@item.RecordId" class="cartCount_input_box"/>
+                        </td>
+
+                        <td class="addItem"><a href="#" class="AddOne" data-id="@item.RecordId" id="add" style="text-decoration:none">
+                            <i class="icon-plus"></i></a></td>
+
+                        <td>$<span id="item-ProductSubTotal-@item.RecordId">@string.Format("{0:0.00}", item.ProductSubTotal)</span>
+                        </td>
+                        <td id="deleteItem">
+                            <a href="#" class="DeleteAll" data-id="@item.RecordId" style="text-decoration:none">
+                                <i class="icon-remove"></i></a>
+                        </td>
+                    </tr> 
+                    <tr>
+                        <td colspan="8">
+                            <br />
+                        </td>
+                    </tr>      
+                }
+            </table>
+            <div style="padding: 20px 0 0 0;">
+                <input class="btn btn-success btn-large checkout" value="Update" type="submit" />
+            </div>
+        }
+
+
+    </div>
+     
+    <table id="shoppingCart_total" class="table table-hover" style="float: right; font-size: 14px; width:550px;">
+        <tr style="height: 10px;">
+            <td style="font-weight: bold;" colspan="3">Shipping Method</td>
+            <td></td>
+            <td style="font-weight: bold;">Subtotal: </td>
+            <td style="font-weight: bold;">$<span id="cart-total">@string.Format("{0:0.00}", Model.shoppingCart.CartTotal)</span>
+            </td>
+        </tr>
+        <tr style="height: 10px; vertical-align: middle;">
+            <td>
+                <input style="margin-right: 0;" type="radio" value="9.00" checked="checked" class="shipping_fee_selcet" id="standard_shipping" name="shipping_fee_selcet" /></td>
+            <td colspan="2">
+                <label for="standard_shipping" style="margin-right: 0px;width:250px;">Standard Shipping (5 - 7 Business Days) ($9.00)</label></td>
+            <td></td>
+            <td>Shipping & Handling	:
+            </td>
+            <td>$<span id="shipping_handing">9.00</span>
+            </td>
+        </tr>
+        <tr style="height: 10px; vertical-align: middle;">
+            <td>
+                <input style="margin-right: 0;" type="radio" value="15.00" class="shipping_fee_selcet" id="priority_shipping" name="shipping_fee_selcet" /></td>
+            <td colspan="2">
+                <label for="priority_shipping" style="margin-right: 0px;width:250px;">Priority Shipping (2-5 Business Days) ($15.00)</label></td>
+            <td></td>
+            <td style="font-weight: bold;">Grand Total Eexcl. Tax :
+            </td>
+            <td style="font-weight: bold;">$<span id="total_excl_tax">@string.Format("{0:0.00}", Model.shoppingCart.CartTotal)</span>
+            </td>
+        </tr>
+
+        <tr style="height: 10px;">
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>GST :
+            </td>
+            <td>$<span id="total_tax">@string.Format("{0:0.00}", Model.shoppingCart.CartTax)</span>
+            </td>
+
+        </tr>
+
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td style="font-weight: bold;">Grand Total Incl. Tax :
+            </td>
+            <td style="font-weight: bold;">$<span id="total_after_tax">@string.Format("{0:0.00}", Model.shoppingCart.TotalAftertTax)</span>
+            </td>
+        </tr>
+
+    </table>
+
+    <div class="checkout_bt">
+
+        @if ((Session["LoginUser"] == null && HttpContext.Current.Request.Cookies["User"] == null))
+        {  
+            <a class="btn btn-success btn-large checkout" id="checkOutButton" onclick="checkLogin()"><i class="icon-shopping-cart icon-large" style="margin-right: 5px;"></i>Checkout</a>
+        }
+        else
+        {
+            <a class="btn btn-success btn-large checkout" onclick="checkOut()"><i class="icon-shopping-cart icon-large" style="margin-right: 5px;"></i>Update & Checkout</a>
+        }
+
+    </div>
+
+}
+else
+{
+    <p style="text-align: center; font-size: 30px;">Sorry, you do not have any item in current shopping cart</p>
+    <div style="height: 200px; width: 1000px; text-align: center;"></div>
+    <div style="height: 300px; width: 1000px; text-align: center;"><span style=""><a class = "btn btn-success btn-large" href="@Url.Action("Index", "Home")">Go to shopping</a></span></div>
+}
+
+

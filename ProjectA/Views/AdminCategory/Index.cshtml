@@ -1,0 +1,93 @@
+﻿@model ProjectA.Models.SubCategory
+
+@{
+    ViewBag.Title = "Category";
+    Layout = "~/Views/Shared/AdminHome.cshtml";
+}
+<script src="@Url.Content("~/Scripts/jquery-1.7.1.js")" type="text/javascript"></script>
+
+    
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        getSubCatage();
+        
+
+        $("#MainCategoryName").change(function () {
+            var mainCategory = $(this).val();
+
+            $("#SubCategoryPartial").html("<img src='http://www.elevateweb.co.uk/spinner.gif' />");
+
+            if(mainCategory!="")
+            {
+                $("#SubCategoryPartial").load("@Url.Action("changeSubcate", "AdminCategory")", { 'mainCategoryName': mainCategory },
+
+                    function (response, status, xhr) {
+                    if (status == "error") {
+                        alert(status);
+                    }          
+                });
+            }
+
+
+        });
+    });
+
+    function getSubCatage() {
+        var mainCategory = $('#MainCategoryName').val();
+
+        $("#SubCategoryPartial").html("<img src='http://www.elevateweb.co.uk/spinner.gif' />");
+
+        if (mainCategory != "") {
+            $("#SubCategoryPartial").load("@Url.Action("changeSubcate", "AdminCategory")", { 'mainCategoryName': mainCategory },
+
+                    function (response, status, xhr) {
+                        if (status == "error") {
+                            alert(status);
+                        }
+                    });
+            }
+    }
+
+</script>
+
+
+
+<div class="container-fluid">
+    <div class="row-fluid">
+        <div class="span12" style="text-align:left; padding-top:30px;">
+
+            <div class="row-fluid">
+            @if (!String.IsNullOrEmpty(Convert.ToString(ViewData["UpdateResult"])))
+            {
+                <div class="span6 alert alert-success">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    <span>
+                        <img src="@Url.Content("~/Content/themes/base/images/tick.png")" /><br />
+                        <p id="message">
+                            @Html.Raw(Convert.ToString(ViewData["UpdateResult"]).Replace(Convert.ToString((char)13),"<br />"))
+                        </p>
+                    </span>
+                </div>
+            }
+            </div>
+
+            <div class="row-fluid">
+                <div class="span6">
+                    <h5>Main Category: </h5>
+                    @Html.DropDownListFor(model => model.MainCategoryName, (SelectList)(ViewBag.Maincategories))
+                    @Html.HiddenFor(model=>model.SubcategoryName)
+                </div>
+            </div>
+            
+                                
+            <div class="row-fluid" style="border:0.5px ridge;">
+				<div class="span6" id="SubCategoryPartial" >
+
+				</div>
+			</div>
+
+        </div>
+    </div>
+</div>

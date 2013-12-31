@@ -1,0 +1,198 @@
+﻿@model ProjectA.ViewModels.personalInfo
+@{
+    ViewBag.Title = "personalInfo";
+    Layout = "~/Views/Shared/_Myprofile.cshtml";
+}
+
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#target :input").each(function (i, obj) {
+            if ($(obj).attr("id") == "userName") {
+                $(obj).attr("disabled", true);
+            }
+        });
+
+    });
+
+    $(function () {
+        $("#edit").click(function () {
+        });
+    });
+</script>
+
+
+<!-- Datepicker-->
+<script type="text/javascript">
+    $(function () {
+        $("#datepicker").datepicker({
+            buttonImage: '../../Content/themes/base/images/date-picker-icon.png',
+            buttonImageOnly: true,
+            showOn: 'both',
+            changeMonth: true,
+            changeYear: true,
+            yearRange: '1910:2013',
+            dateFormat: 'dd/mm/yy'
+        });
+    });
+
+</script>
+
+@using (Html.BeginForm())
+{
+    <div class="mainContent" style="height:auto">
+        <ul style="list-style-type:none;">
+            <li>
+                <div class="editor-label">
+                    User Name <em>*</em>
+                </div>
+               
+                <div class="editor-field">
+                    @Html.TextBoxFor(model => model.userName,new {@readonly = "readonly" })
+                    @Html.ValidationMessageFor(model => model.userName)
+                </div>
+            </li>
+
+            <li>
+                <table>
+                    <tr>
+                        <td style="height:55px;padding-right:20px;">
+                            <div class="editor-label">
+                                First Name<em>*</em>
+                            </div>
+                            <div class="editor-field">
+                                @Html.TextBoxFor(model => model.firstName)
+                            </div>
+                            <div style="height:15px;">
+                                @Html.ValidationMessageFor(model => model.firstName, "", new { style="height:15px;"})
+                            </div>
+                        </td>
+                        <td style="height:55px;">
+                            <div class="editor-label">
+                                Last Name<em>*</em>
+                            </div>
+                            <div class="editor-field">
+                                @Html.TextBoxFor(model => model.lastName)
+                            </div>
+                            <div style="height:15px;">
+                                @Html.ValidationMessageFor(model => model.lastName, "", new { style="height:15px;"})
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </li>
+
+            <li>
+                <table>
+                    <tr>
+                        <td style="height:55px;padding-right:20px;">
+                            <div class="editor-label">
+                                Email<em>*</em>
+                            </div>
+                            <div class="editor-field">
+                                @Html.TextBoxFor(model => model.email)
+                                @Html.ValidationMessageFor(model => model.email)
+                            </div>
+                        </td>
+
+                        <td style="height:55px;">
+                            <div class="editor-label">
+                                @Html.LabelFor(model => model.birthday)
+                            </div>
+                            <div class="editor-field">
+                                @Html.TextBoxFor(model => model.birthday, new { id = "datepicker", @readonly = "readonly", @Value = Model.birthday.Value.ToString("dd/MM/yyyy") })
+
+                                @Html.ValidationMessageFor(model => model.birthday)
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </li>
+
+            <li style="display:inline-block; margin-right:20px;">
+                <table>
+                    <tr>
+                        <td style="height:55px;padding-right:20px;">
+                            <div class="editor-label">
+                                State<em>*</em>
+                            </div>
+                            <div class="editor-field">
+                                @Html.DropDownListFor(model => model.State, (SelectList)(ViewBag.States), String.Empty)
+                            </div>
+                            <div style="height:15px;">
+                                @Html.ValidationMessageFor(model => model.State, "", new { style="height:15px;"})
+                            </div>
+                        </td>
+
+                        <td style="height:55px; padding-right:20px;">
+                            <div class="editor-label">
+                                City<em>*</em>
+                            </div>
+                            <div class="editor-field">
+                                @Html.TextBoxFor(model => model.City)
+                            </div>
+                            <div style="height:15px;">
+                                @Html.ValidationMessageFor(model => model.City, "", new { style="height:15px;"})
+                            </div>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td style="height:55px; padding-right:20px;">
+                            <div class="editor-label">
+                                Suburban/Town<em>*</em>
+                            </div>
+                            <div class="editor-field">
+                                @Html.TextBoxFor(model => model.Suburban)
+                            </div>
+                            <div style="height:15px;">
+                                @Html.ValidationMessageFor(model => model.Suburban, "", new { style="height:15px;"})
+                            </div>
+                        </td>
+
+                        <td>
+                            <div class="editor-label">
+                                Post Code<em>*</em>
+                            </div>
+                            <div class="editor-field">
+                                @Html.TextBoxFor(model => model.postcode, new { style = "width:100px" })
+                            </div>
+                            <div style="height:15px;">
+                                @Html.ValidationMessageFor(model => model.postcode, "", new { style="height:15px;"})
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+
+            <li style="display:inline-block; margin-right:30px;">
+                <div class="editor-label">
+                    @Html.LabelFor(model => model.addressLine1)
+                </div>
+                
+                @Html.TextBoxFor(model => model.addressLine1, new { style = "width:250px" })<br />
+                @Html.TextBoxFor(model => model.addressLine2, new { style = "width:250px" })<br />
+            </li>
+
+            <li>
+                <div class="editor-label">
+                    @Html.LabelFor(model => model.phone)
+                </div>
+                <div class="editor-field">
+                    @Html.TextBoxFor(model => model.phone, new { style = "width:250px" })
+                    @Html.ValidationMessageFor(model => model.phone)
+                </div>
+            </li>
+
+            
+        </ul>
+
+        <div id="submit" style="margin-left:250px;">
+            <button class="btn btn-large btn-primary" type="submit">Update</button>
+        </div>
+        
+
+        
+    </div>
+}
+

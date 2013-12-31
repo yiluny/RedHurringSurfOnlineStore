@@ -1,0 +1,90 @@
+﻿@model ProjectA.ViewModels.signInViewModel
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<link rel="stylesheet" href="@Url.Content("~/Content/SignIn.css")" />
+
+<div style="height:680px">
+<div id="leftContent">
+    @using (Html.BeginForm())
+    {
+        <ul style="float:left; list-style-type:none;">
+            <li style="font-family:Arial Black; font-size:x-large; margin-top:15px; margin-bottom:25px;">
+                Sign In
+            </li>
+
+           @if(!ViewData.ModelState.IsValid)
+           {
+                <li class="alert alert-error">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    <strong>Warning!  </strong><br />
+                    @Html.ValidationMessage("SignIn")
+                    
+                </li>    
+           }
+            
+            <li>Username :</li>
+            <li>
+                
+                <div class="input-prepend">
+                    <span class="add-on" style="height:30px; width:30px;"><i class="icon-user icon-2x" style="padding-right:10px;padding-top:5px;"></i></span>
+                   
+                    @Html.TextBox("Username", "", new { @class = "span12", placeholder = "Username",style="height:40px; font-size:17px;" })
+                </div>
+                <br />
+                @Html.ValidationMessage("Username", new { @class="ErrorMessage"})
+            </li>
+
+            <li>Password :</li>
+            <li>
+                
+                <div class="input-prepend"> 
+                    <span class="add-on" style="height:30px; width:30px;"><i class="icon-key icon-2x" style="padding-right:17px;padding-top:5px;"></i></span>
+              
+                    @Html.Password("Password", "", new { @class = "span12", placeholder = "Password",style="height:40px; font-size:17px;" })
+                </div>
+                <br />
+                @Html.ValidationMessage("Password",new { @class="ErrorMessage"})
+            </li>
+
+            <li>
+                <label id="lbl_rememberMe" for="rememberMe" style="text-align: center; font-size: 15px; bottom: 0; left: 30px; display: inline;">
+                    @Html.CheckBox("rememberMe", new { @id = "rememberMe", style = " text-align:center; font-size:14px" })
+
+                    Remember me
+                </label>
+            </li>
+
+            <li>
+                <a href="/SignIn/ResetPassword" style=" text-align:left; font-size:15px;bottom:0; left:30px">Forget password?</a>
+            </li>
+
+            <li style="margin-top:20px;">
+                <input type="submit" class="btn btn-medium btn-info" value="Sign In" style="font-size:16px; "/>  
+            </li>
+        </ul>
+    }
+</div>
+
+
+<div id="rightContent">
+    <p>
+        New to Red Herring?
+        <br />
+        <br />
+    </p>
+        <span>started now. It's fast and easy!</span>
+        <br />
+        <br />
+        <a class="btn btn-medium btn-info" href="/Register/Index" style="font-size: 15px;">
+            <i class=" icon-hand-right"></i>Register
+        </a>
+    
+</div>
+
+<div id="back">
+    <a href="https://www.paypal.com/au/webapps/mpp/home"><img src="@Url.Content("~/Content/themes/base/images/back.jpg")" /></a>
+</div>
+    </div>

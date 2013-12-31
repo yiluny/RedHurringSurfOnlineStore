@@ -1,0 +1,10 @@
+﻿@model Webdiyer.WebControls.Mvc.PagedList<ProjectA.Models.Register>
+@using Webdiyer.WebControls.Mvc;
+@{
+    ViewBag.Title = "Customers";
+    Layout = "~/Views/Shared/AdminHome.cshtml";
+}
+
+<link href="@Url.Content("~/Content/AdminSite/Admin_Customers.css")" rel="stylesheet" media="screen" type="text/css" />
+
+@{Html.RenderPartial("CustomerSearchResultList", Model); }
